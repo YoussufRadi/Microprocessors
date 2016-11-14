@@ -1,16 +1,16 @@
-package components;
+package memoryHierarchy;
 
 public class CacheBlock {
 
-	private Object[] data;
+	private Byte[] data;
 	private int tag;
 	private boolean valid;
 
-	public Object[] getData() {
+	public Byte[] getData() {
 		return data;
 	}
 
-	public void setData(Object[] data) {
+	public void setData(Byte[] data) {
 		this.data = data;
 	}
 
@@ -31,7 +31,7 @@ public class CacheBlock {
 	}
 
 	public CacheBlock(int lineSize) {
-		this.data = new Object[lineSize];
+		this.data = new Byte[lineSize];
 		this.tag = -1;
 		this.valid = false;
 	}

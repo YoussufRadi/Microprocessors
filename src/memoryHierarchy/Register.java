@@ -1,4 +1,4 @@
-package components;
+package memoryHierarchy;
 
 public class Register {
 	

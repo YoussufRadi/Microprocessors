@@ -1,4 +1,4 @@
-package components;
+package memoryHierarchy;
 
 import exceptions.CacheMissException;
 
