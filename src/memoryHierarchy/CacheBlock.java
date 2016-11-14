@@ -4,6 +4,7 @@ public class CacheBlock {
 
 	private Byte[] data;
 	private int tag;
+	private boolean dirty;
 	private boolean valid;
 
 	public Byte getData(int offset) {
@@ -38,9 +39,18 @@ public class CacheBlock {
 		this.valid = valid;
 	}
 
+	public boolean isDirty() {
+		return dirty;
+	}
+
+	public void setDirty(boolean dirty) {
+		this.dirty = dirty;
+	}
+
 	public CacheBlock(int lineSize) {
 		this.data = new Byte[lineSize];
 		this.tag = -1;
+		this.dirty = false;
 		this.valid = false;
 	}
 

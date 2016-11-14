@@ -46,7 +46,7 @@ public class MemoryHierarchy {
 			int index = (int) (Math.log(caches[i].getNumberOfLines() / caches[i].getmWays())/Math.log(2));
 			int tag = (int) (address / (Math.pow(2, offset) * Math.pow(2, index)));
 			try {
-				return caches[i].fetch(index,tag,offset);
+				return caches[i].fetch(index,tag,offset); //still need to write it in upper cache levels in case of read miss
 			} catch (Exception e) {
 				continue;
 			}
