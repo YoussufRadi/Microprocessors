@@ -1,17 +1,33 @@
 package components;
 
-public class CacheSet {
-	
-	CacheBlock [] blocks;
-	int size;
-	LinkList LRUList;	//Linked list to track the LRU element in the set
+import exceptions.CacheMissException;
 
-	public CacheSet(int size, int lineSize){
-		this.size = size;
-		this.LRUList = new LinkList();
-		this.blocks = new CacheBlock[size];
+public class CacheSet {
+
+	private CacheBlock[] blocks;
+
+	// LinkList LRUList; //Linked list to track the LRU element in the set
+
+	public CacheBlock[] getBlocks() {
+		return blocks;
+	}
+
+	public void setBlocks(CacheBlock[] blocks) {
+		this.blocks = blocks;
+	}
+
+	public CacheSet(int setLines, int lineSize) {
+		// this.LRUList = new LinkList();
+		this.blocks = new CacheBlock[setLines];
 		for (int i = 0; i < blocks.length; i++)
 			blocks[i] = new CacheBlock(lineSize);
+	}
+
+	public CacheBlock fetch(int tag) throws RuntimeException {
+		for (int i = 0; i < this.blocks.length; i++)
+			if (blocks[i].getTag() == tag)
+				return blocks[i];
+		throw new CacheMissException("Miss");
 	}
 
 }
