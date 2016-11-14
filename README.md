@@ -1,0 +1,2 @@
+# Microprocessors
+This project is to an architectural simulator capable of assessing the performance of a simplified superscalar out-of-order 16-bit RISC processor that uses Tomasulo’s algorithm with speculation taking into account the effect of the cache organization.   The project has two phases, The first phase is a Memory Hierarchy simulator of the processor, while the second phase is a Superscalar out-of‐order architectural simulator (Tomasulo’s Algorithm). 
