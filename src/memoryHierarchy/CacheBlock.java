@@ -6,6 +6,14 @@ public class CacheBlock {
 	private int tag;
 	private boolean valid;
 
+	public Byte getData(int offset) {
+		return data[offset];
+	}
+
+	public void setData(Byte data, int offset) {
+		this.data[offset] = data;
+	}
+	
 	public Byte[] getData() {
 		return data;
 	}

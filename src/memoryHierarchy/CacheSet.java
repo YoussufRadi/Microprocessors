@@ -23,10 +23,10 @@ public class CacheSet {
 			blocks[i] = new CacheBlock(lineSize);
 	}
 
-	public CacheBlock fetch(int tag) throws RuntimeException {
+	public Byte fetch(int tag, int offset) throws RuntimeException {
 		for (int i = 0; i < this.blocks.length; i++)
 			if (blocks[i].getTag() == tag)
-				return blocks[i];
+				return blocks[i].getData(offset);
 		throw new CacheMissException("Miss");
 	}
 

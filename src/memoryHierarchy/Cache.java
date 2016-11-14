@@ -83,11 +83,11 @@ public class Cache {
 			sets[i] = new CacheSet(mWays, lineSize);
 	}
 
-	public CacheBlock fetch(int index, int tag) throws RuntimeException {
+	public Byte fetch(int index, int tag, int offset) throws RuntimeException {
 		if (index > this.sets.length)
 			throw new StructuralException("Out of bounds");
 		else
-			return sets[index].fetch(tag);
+			return sets[index].fetch(tag, offset);
 	}
 
 }

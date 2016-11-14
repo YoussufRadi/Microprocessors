@@ -25,4 +25,7 @@ public class Memory {
 		this.data = new Byte[65536];
 	}
 
+	public Byte fetch(int address) {
+		return data[address];
+	}
 }

@@ -1,4 +1,4 @@
-package memoryHierarchy;
+package instructionSetArchitecture;
 
 public class Register {
 	
