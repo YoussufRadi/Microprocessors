@@ -76,9 +76,7 @@ public class Cache {
 		this.policy = policy;
 		this.accessTime = accessTime;
 		this.numberOfLines = cacheSize / lineSize;
-		this.sets = new CacheSet[numberOfLines / mWays]; // need to handle
-															// division to
-															// result in ceiling
+		this.sets = new CacheSet[numberOfLines / mWays];
 		for (int i = 0; i < sets.length; i++)
 			sets[i] = new CacheSet(mWays, lineSize);
 	}
@@ -88,6 +86,11 @@ public class Cache {
 			throw new StructuralException("Out of bounds");
 		else
 			return sets[index].fetch(tag, offset);
+	}
+
+	public void write(Byte[] data, int index, int tag) {
+		sets[index].write(data, tag);
+
 	}
 
 }

@@ -7,14 +7,6 @@ public class CacheBlock {
 	private boolean dirty;
 	private boolean valid;
 
-	public Byte getData(int offset) {
-		return data[offset];
-	}
-
-	public void setData(Byte data, int offset) {
-		this.data[offset] = data;
-	}
-	
 	public Byte[] getData() {
 		return data;
 	}
@@ -47,11 +39,15 @@ public class CacheBlock {
 		this.dirty = dirty;
 	}
 
-	public CacheBlock(int lineSize) {
-		this.data = new Byte[lineSize];
-		this.tag = -1;
+	public CacheBlock(Byte[] data, int tag) {
+		this.data = data;
+		this.tag = tag;
 		this.dirty = false;
-		this.valid = false;
+		this.valid = true;
+	}
+
+	public Byte getData(int offset) {
+		return data[offset];
 	}
 
 }
