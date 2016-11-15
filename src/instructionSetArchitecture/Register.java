@@ -1,4 +1,4 @@
-package components;
+package instructionSetArchitecture;
 
 public class Register {
 	
