@@ -28,4 +28,9 @@ public class Memory {
 	public Byte fetch(int address) {
 		return data[address];
 	}
+
+	public void write(Byte[] data, int address) {
+		for (int i = 0; i < data.length; i++)
+			data[address+i] = data[i];
+	}
 }

@@ -88,9 +88,8 @@ public class Cache {
 			return sets[index].fetch(tag, offset);
 	}
 
-	public void write(Byte[] data, int index, int tag) {
-		sets[index].write(data, tag);
-
+	public CacheBlock write(Byte[] data, int index, int tag) {
+		return sets[index].write(data, tag);
 	}
 
 }

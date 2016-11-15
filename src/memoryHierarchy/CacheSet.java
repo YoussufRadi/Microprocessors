@@ -45,23 +45,26 @@ public class CacheSet {
 		throw new CacheMissException("Miss");
 	}
 
-	public void write(Byte[] data, int tag) {
+	public CacheBlock write(Byte[] data, int tag) {
 		CacheBlock x = new CacheBlock(data, tag);
+		CacheBlock y = null;
 		for (int i = 0; i < LRUList.size(); i++) {
 			if (LRUList.get(i).getTag() == tag)
 				LRUList.remove(i);
 		}
 		LRUList.add(x);
 		for (int i = 0; i < blocks.size(); i++) {
-			if (blocks.get(i).getTag() == tag)
-				blocks.remove(i);
+			if (blocks.get(i).getTag() == tag) {
+				blocks.get(i).setData(data);
+				blocks.get(i).setDirty(true);
+				return y;
+			}
 		}
-		if(blocks.size()> lineSize){
-			CacheBlock y = LRUList.remove(0);
+		if (blocks.size() > lineSize) {
+			y = LRUList.remove(0);
 			blocks.remove(y);
 		}
 		blocks.add(x);
-		blocks.get(blocks.size()-1).setData(data);
-
+		return y;
 	}
 }
