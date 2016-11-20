@@ -31,6 +31,14 @@ public class Memory {
 
 	public void write(Byte[] data, int address) {
 		for (int i = 0; i < data.length; i++)
-			data[address+i] = data[i];
+			this.data[address+i] = data[i];
+	}
+	
+	public Byte[] writeByte(Byte data, int address, int offset , int lineSize) {
+		this.data[address] = data;
+		Byte[] x  = new Byte[lineSize];
+		for(int i = 0; i < lineSize; i++)
+			x[i] = this.data[address - offset + i];
+		return x;
 	}
 }

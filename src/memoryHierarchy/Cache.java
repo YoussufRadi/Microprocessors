@@ -89,7 +89,11 @@ public class Cache {
 	}
 
 	public CacheBlock write(Byte[] data, int index, int tag) {
-		return sets[index].write(data, tag);
+		return sets[index].write(data, tag , this.policy);
+	}
+	
+	public CacheBlock writeByte(Byte data, int index, int tag, int offset) {
+		return sets[index].writeByte(data, tag, offset);
 	}
 
 }

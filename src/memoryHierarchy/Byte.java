@@ -15,4 +15,8 @@ public class Byte { // 3ashan 5ater Hazem :D
 	public Byte() {
 		this.data = new Object();
 	}
+	
+	public Byte(Byte data) {
+		this.data = data;
+	}
 }

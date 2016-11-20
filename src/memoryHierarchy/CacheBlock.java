@@ -46,8 +46,8 @@ public class CacheBlock {
 		this.valid = true;
 	}
 
-	public Byte getData(int offset) {
-		return data[offset];
+	public void setData(Byte data, int offset) {
+		this.data[offset] = data;
 	}
 
 }
