@@ -77,36 +77,38 @@ public class MemoryHierarchy {
 				/ caches[j].getmWays()) / Math.log(2));
 		int newTag = (int) (address / (Math.pow(2, newOffset) * Math.pow(2,
 				newIndex)));
+		
 		CacheBlock x1 = caches[j].write(bytes, newIndex, newTag);
+		
 		if (x1 != null)
 			writeInLowerLevel(x1, ++j, address);
+		
 		if (j >= 0)
 			writeInUpperLevel(bytes, --j, address);
 
 	}
 
 	public void write(Byte data, int address) {
-		int instructionAccessTime = 0;	
+		int instructionAccessTime = 0;
 		CacheBlock x = null;
 		int offset = (int) (Math.log(caches[0].getLineSize()) / Math.log(2));
-		
+
 		for (int i = 0; i < caches.length; i++) {
-			
+
 			instructionAccessTime += caches[i].getAccessTime();
 			totalAccessTime += caches[i].getAccessTime();
 			setLatestAccessTime(instructionAccessTime);
-			
+
 			int index = (int) (Math.log(caches[i].getNumberOfLines()
 					/ caches[i].getmWays()) / Math.log(2));
 			int tag = (int) (address / (Math.pow(2, offset) * Math
 					.pow(2, index)));
-			
+
 			x = caches[i].writeByte(data, index, tag, offset);
-			
+
 			if (x != null) {
-				
-				writeInLowerLevel(x, ++i, address);
-				
+					writeInLowerLevel(x, ++i, address);
+
 				Byte[] y = new Byte[x.getData().length];
 				for (int z = 0; z < y.length; z++)
 					y[z] = new Byte(x.getData()[z]);
@@ -122,20 +124,20 @@ public class MemoryHierarchy {
 
 	private void writeInLowerLevel(CacheBlock x, int i, int address) {
 		CacheBlock x1 = null;
-		int newOffset = (int) (Math.log(caches[i].getLineSize()) / Math
-				.log(2));
+		int newOffset = (int) (Math.log(caches[i].getLineSize()) / Math.log(2));
 		int newIndex = (int) (Math.log(caches[i].getNumberOfLines()
 				/ caches[i].getmWays()) / Math.log(2));
 		int newTag = (int) (address / (Math.pow(2, newOffset) * Math.pow(2,
 				newIndex)));
+
 		Byte[] y = new Byte[x.getData().length];
 		for (int z = 0; z < y.length; z++)
 			y[z] = new Byte(x.getData()[z]);
-		
+
 		if (i >= caches.length) {
 			mainMemory.write(y, address);
-		} else if (caches[i-1].getPolicy().equals(WritingPolicy.WRITE_THROUGH)
-				|| x.isDirty()) {
+		} else if (caches[i - 1].getPolicy()
+				.equals(WritingPolicy.WRITE_THROUGH)) {
 			x1 = caches[i].write(y, newIndex, newTag);
 			if (x1 != null)
 				writeInLowerLevel(x1, ++i, address);

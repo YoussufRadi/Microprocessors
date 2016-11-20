@@ -48,11 +48,13 @@ public class CacheSet {
 	public CacheBlock write(Byte[] data, int tag, WritingPolicy policy) {
 		CacheBlock x = new CacheBlock(data, tag);
 		CacheBlock y = null;
+		
 		for (int i = 0; i < LRUList.size(); i++) {
 			if (LRUList.get(i).getTag() == tag)
 				LRUList.remove(i);
 		}
 		LRUList.add(x);
+		
 		for (int i = 0; i < blocks.size(); i++) {
 			if (blocks.get(i).getTag() == tag) {
 				blocks.get(i).setData(data);
@@ -62,7 +64,7 @@ public class CacheSet {
 				else return y;
 			}
 		}
-		if (blocks.size() > lineSize) {
+		if (blocks.size() >= lineSize) {
 			y = LRUList.remove(0);
 			blocks.remove(y);
 		}
