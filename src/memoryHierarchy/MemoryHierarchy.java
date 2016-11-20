@@ -49,7 +49,7 @@ public class MemoryHierarchy {
 
 	public Byte fetch(int address) throws RuntimeException {
 		int instructionAccessTime = 0;
-		Byte x = null;
+		Byte[] x = null;
 		for (int i = 0; i < caches.length; i++) {
 			instructionAccessTime += caches[i].getAccessTime();
 			int offset = (int) (Math.log(caches[i].getLineSize()) / Math.log(2));
@@ -60,14 +60,14 @@ public class MemoryHierarchy {
 			try {
 				totalAccessTime += caches[i].getAccessTime();
 				setLatestAccessTime(instructionAccessTime);
-				x = caches[i].fetch(index, tag, offset);
-				writeInUpperLevel(new Byte[] { x }, --i, address);
-				return x;
+				x = caches[i].fetch(index, tag);
+				writeInUpperLevel( x, --i, address);
+				return x[offset];
 			} catch (Exception e) {
 				continue;
 			}
 		}
-		writeInUpperLevel(new Byte[] { x }, caches.length - 1, address);
+		writeInUpperLevel(x, caches.length - 1, address);
 		return mainMemory.fetch(address);
 	}
 

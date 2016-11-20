@@ -34,13 +34,13 @@ public class CacheSet {
 		this.setLineSize(lineSize);
 	}
 
-	public Byte fetch(int tag, int offset) throws RuntimeException {
+	public Byte[] fetch(int tag) throws RuntimeException {
 		for (int i = 0; i < this.blocks.size(); i++)
 			if (blocks.get(i).getTag() == tag) {
 				if (LRUList.contains(blocks.get(i)))
 					LRUList.remove(blocks.get(i));
 				LRUList.add(blocks.get(i));
-				return blocks.get(i).getData(offset);
+				return blocks.get(i).getData();
 			}
 		throw new CacheMissException("Miss");
 	}
