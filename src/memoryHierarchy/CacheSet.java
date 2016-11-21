@@ -46,7 +46,7 @@ public class CacheSet {
 	}
 
 	public CacheBlock write(Byte[] data, int tag, WritingPolicy policy) {
-		CacheBlock x = new CacheBlock(data, tag);
+		CacheBlock x = new CacheBlock(data.clone(), tag);
 		CacheBlock y = null;
 		
 		for (int i = 0; i < LRUList.size(); i++) {
