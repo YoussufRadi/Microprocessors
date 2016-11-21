@@ -25,8 +25,11 @@ public class Memory {
 		this.data = new Byte[65536];
 	}
 
-	public Byte fetch(int address) {
-		return data[address];
+	public Byte[] fetch(int address, int offset, int lineSize) {
+		Byte[] x  = new Byte[lineSize];
+		for(int i = 0; i < lineSize; i++)
+			x[i] = this.data[address - offset + i];
+		return x;
 	}
 
 	public void write(Byte[] data, int address) {
