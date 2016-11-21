@@ -16,7 +16,7 @@ public class Byte { // 3ashan 5ater Hazem :D
 		this.data = new Object();
 	}
 	
-	public Byte(Byte data) {
+	public Byte(Object data) {
 		this.data = data;
 	}
 }
