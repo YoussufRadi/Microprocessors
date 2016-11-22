@@ -48,20 +48,21 @@ public class CacheSet {
 	public CacheBlock write(Byte[] data, int tag, WritingPolicy policy) {
 		CacheBlock x = new CacheBlock(data.clone(), tag);
 		CacheBlock y = null;
-		
+
 		for (int i = 0; i < LRUList.size(); i++) {
 			if (LRUList.get(i).getTag() == tag)
 				LRUList.remove(i);
 		}
 		LRUList.add(x);
-		
+
 		for (int i = 0; i < blocks.size(); i++) {
 			if (blocks.get(i).getTag() == tag) {
 				blocks.get(i).setData(data);
 				blocks.get(i).setDirty(true);
 				if (policy.equals(WritingPolicy.WRITE_THROUGH))
 					return blocks.get(i);
-				else return y;
+				else
+					return y;
 			}
 		}
 		if (blocks.size() >= lineSize) {
@@ -69,7 +70,11 @@ public class CacheSet {
 			blocks.remove(y);
 		}
 		blocks.add(x);
-		return y;
+		if (policy.equals(WritingPolicy.WRITE_THROUGH)
+				|| (policy.equals(WritingPolicy.WRITE_BACK) && x.isDirty()))
+			return x;
+		else
+			return null;
 	}
 
 	public CacheBlock writeByte(Byte data, int tag, int offset) {
