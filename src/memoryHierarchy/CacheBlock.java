@@ -1,6 +1,6 @@
 package memoryHierarchy;
 
-public class CacheBlock {
+public class CacheBlock implements Cloneable {
 
 	private Byte[] data;
 	private int tag;
@@ -39,6 +39,7 @@ public class CacheBlock {
 		this.dirty = dirty;
 	}
 
+	
 	public CacheBlock(Byte[] data, int tag) {
 		this.data = data;
 		this.tag = tag;
@@ -46,8 +47,8 @@ public class CacheBlock {
 		this.valid = true;
 	}
 
-	public Byte getData(int offset) {
-		return data[offset];
+	public void setData(Byte data, int offset) {
+		this.data[offset] = data;
 	}
 
 }
