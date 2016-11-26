@@ -43,23 +43,23 @@ public class Instruction {
 			break;
 		case "SW":
 			break;
-		case "JMP":
+		case "JMP": jmp(this.regA, this.imm);
 			break;
-		case "BEQ":
+		case "BEQ": beq(this.regA, this.regB, this.imm);
 			break;
-		case "JALR":
+		case "JALR": jalr(this.regA, this.regB);
 			break;
-		case "RET":
+		case "RET": ret(this.regA);
 			break;
-		case "ADD":
+		case "ADD": add(this.regA, this.regB, this.regC);
 			break;
-		case "SUB":
+		case "SUB": sub(this.regA, this.regB, this.regC);
 			break;
-		case "ADDI":
+		case "ADDI": addImm(this.regA, this.regB, this.imm);
 			break;
-		case "NAND":
+		case "NAND": nand(this.regA, this.regB, this.regC);
 			break;
-		case "MUL":
+		case "MUL": mul(this.regA, this.regB, this.regC);
 			break;
 
 		}
