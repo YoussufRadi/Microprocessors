@@ -235,6 +235,10 @@ public class Instruction {
 		return Integer.parseInt(imm);
 
 	}
+	
+	public int getAccessTime(){
+		return 0;
+	}
 
 
 	public static void main(String[] args) {
