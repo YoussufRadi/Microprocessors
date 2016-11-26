@@ -34,7 +34,7 @@ public class CacheSet {
 		this.setLineSize(lineSize);
 	}
 
-	public Byte[] fetch(int tag) throws RuntimeException {
+	public Word[] fetch(int tag) throws RuntimeException {
 		for (int i = 0; i < this.blocks.size(); i++)
 			if (blocks.get(i).getTag() == tag) {
 				if (LRUList.contains(blocks.get(i)))
@@ -45,7 +45,7 @@ public class CacheSet {
 		throw new CacheMissException("Miss");
 	}
 
-	public CacheBlock write(Byte[] data, int tag, WritingPolicy policy) {
+	public CacheBlock write(Word[] data, int tag, WritingPolicy policy) {
 		CacheBlock x = new CacheBlock(data.clone(), tag);
 		CacheBlock y = null;
 
@@ -77,7 +77,7 @@ public class CacheSet {
 			return null;
 	}
 
-	public CacheBlock writeByte(Byte data, int tag, int offset) {
+	public CacheBlock writeByte(Word data, int tag, int offset) {
 		CacheBlock x = null;
 		for (int i = 0; i < blocks.size(); i++) {
 			x = blocks.get(i);

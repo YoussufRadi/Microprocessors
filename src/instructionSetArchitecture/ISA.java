@@ -26,12 +26,12 @@ public class ISA {
 		this.registers = registers;
 	}
 
-	public Register getPC() {
-		return PC;
+	public int getPC() {
+		return PC.getValue();
 	}
 
-	public void setPC(Register pC) {
-		PC = pC;
+	public void setPC(int PC_value) {
+		PC.setValue(PC_value);
 	}
 
 }
