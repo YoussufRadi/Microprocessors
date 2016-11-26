@@ -45,9 +45,9 @@ public class Instruction {
 
 	public void execute() {
 		switch (this.type) {
-		case "LW":
+		case "LW": lw(this.regA, this.regB, this.imm);
 			break;
-		case "SW":
+		case "SW": sw(this.regA, this.regB, this.imm);
 			break;
 		case "JMP":
 			jmp(this.regA, this.imm);
