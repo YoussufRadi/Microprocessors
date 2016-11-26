@@ -22,6 +22,14 @@ public class FunctionalUnit {
 	private int[] A;
 	private ArrayList<Instruction> writeResult; //need to be modified with ROB number
 
+	public String getName() {
+		return name;
+	}
+
+	public ArrayList<Instruction> getWriteResult() {
+		return writeResult;
+	}
+
 	public FunctionalUnit(String name, int numberOfInstances, int execTime) {
 		this.name = name;
 		this.numberOfInstances = numberOfInstances;
