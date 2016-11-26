@@ -170,7 +170,7 @@ public class Instruction {
 		boolean isEqual = rA_value == rB_value;
 
 		if ((isEqual && immediate > 0) || (!isEqual && immediate < 0)) {
-			Simulator.ISA_regs.setPC(pc+1+immediate);
+			Simulator.ISA_regs.setPC(pc + 1 + immediate);
 		}
 	}
 
@@ -178,6 +178,52 @@ public class Instruction {
 		String regNum = register.substring(1);
 		int regNum_int = Integer.parseInt(regNum);
 		return regNum_int;
+	}
+
+	public Register getDestination() {
+		if (this.type.equals("LW") || this.type.equals("ADD")
+				|| this.type.equals("SUB") || this.type.equals("NAND")
+				|| this.type.equals("MUL") || this.type.equals("ADDI")) {
+			int rA_index = getRegIndex(this.regA);
+			return Simulator.ISA_regs.getRegisters()[rA_index];
+		}
+		return null;
+	}
+
+	public Register getVJ() {
+
+		if (this.type.equals("LW") || this.type.equals("JALR")
+				|| this.type.equals("ADD") || this.type.equals("SUB")
+				|| this.type.equals("NAND") || this.type.equals("MUL")
+				|| this.type.equals("ADDI")) {
+			int rB_index = getRegIndex(this.regB);
+			return Simulator.ISA_regs.getRegisters()[rB_index];
+		}
+		int rA_index = getRegIndex(this.regA);
+		return Simulator.ISA_regs.getRegisters()[rA_index];
+
+	}
+	
+	public Register getVK(){
+		
+		if(this.type.equals("SW") || this.type.equals("BEQ")){
+			int rB_index = getRegIndex(this.regB);
+			return Simulator.ISA_regs.getRegisters()[rB_index];
+		}
+		if(this.type.equals("ADD") || this.type.equals("SUB")
+				|| this.type.equals("NAND") || this.type.equals("MUL")){
+			int rC_index = getRegIndex(this.regC);
+			return Simulator.ISA_regs.getRegisters()[rC_index];
+		}
+		return null;
+	}
+
+	public String getImm() {
+		return imm;
+	}
+
+	public void setImm(String imm) {
+		this.imm = imm;
 	}
 
 	public static void main(String[] args) {
