@@ -44,88 +44,125 @@ public class MemoryHierarchy {
 	public MemoryHierarchy(Cache[] caches, int memoryAccessTime) {
 		mainMemory = new Memory(memoryAccessTime);
 		this.caches = caches;
-
 	}
 
 	public Byte fetch(int address) throws RuntimeException {
+		int offsetBits = (int) (Math.log(caches[0].getLineSize()) / Math
+				.log(2));
+		int offset = (int) (address % Math.pow(2, offsetBits));
 		int instructionAccessTime = 0;
-		Byte x = null;
+		Byte[] x = null;
 		for (int i = 0; i < caches.length; i++) {
 			instructionAccessTime += caches[i].getAccessTime();
-			int offset = (int) (Math.log(caches[i].getLineSize()) / Math.log(2));
-			int index = (int) (Math.log(caches[i].getNumberOfLines()
+			
+			int index = (int) (address / Math.pow(2, offsetBits))
+					% caches[i].getSets().length;
+			int indexBits = (int) (Math.log(caches[i].getNumberOfLines()
 					/ caches[i].getmWays()) / Math.log(2));
-			int tag = (int) (address / (Math.pow(2, offset) * Math
-					.pow(2, index)));
+			int tag = (int) (address / Math.pow(2, offsetBits) / Math.pow(2,
+					indexBits));
 			try {
 				totalAccessTime += caches[i].getAccessTime();
 				setLatestAccessTime(instructionAccessTime);
-				x = caches[i].fetch(index, tag, offset);
-				writeInUpperLevel(new Byte[] { x }, --i, address);
-				return x;
+				x = caches[i].fetch(index, tag);
+				int c = i;
+				writeInUpperLevel(x, --c, address);
+				return x[offset];
 			} catch (Exception e) {
 				continue;
 			}
+
 		}
-		writeInUpperLevel(new Byte[] { x }, caches.length - 1, address);
-		return mainMemory.fetch(address);
+		x = mainMemory.fetch(address,offset,caches[0].getLineSize());
+		writeInUpperLevel(x, caches.length - 1, address);
+		return x[offset];
 	}
 
 	private void writeInUpperLevel(Byte[] bytes, int j, int address) {
-		int newOffset = (int) (Math.log(caches[j].getLineSize()) / Math.log(2));
-		int newIndex = (int) (Math.log(caches[j].getNumberOfLines()
+		if (j < 0)
+			return;
+		int offsetBits = (int) (Math.log(caches[0].getLineSize()) / Math.log(2));
+		int newIndex = (int) (address / Math.pow(2, offsetBits))
+				% caches[j].getSets().length;
+		int indexBits = (int) (Math.log(caches[j].getNumberOfLines()
 				/ caches[j].getmWays()) / Math.log(2));
-		int newTag = (int) (address / (Math.pow(2, newOffset) * Math.pow(2,
-				newIndex)));
+		int newTag = (int) (address / Math.pow(2, offsetBits) / Math.pow(2,
+				indexBits));
+
 		CacheBlock x1 = caches[j].write(bytes, newIndex, newTag);
+		int c = j;
 		if (x1 != null)
-			if (caches[j].getPolicy().equals(WritingPolicy.WRITE_THROUGH)
-					|| x1.isDirty())
-				writeInLowerLevel(x1, ++j, address);
-		if(j >= 0)
-			writeInUpperLevel(bytes, ++j, address);
+			writeInLowerLevel(x1, ++c, address);
+		c = j;
+		writeInUpperLevel(bytes, --c, address);
 
 	}
 
-	public void write(Byte[] data, int address) {
+	public void write(Byte data, int address) {
 		int instructionAccessTime = 0;
-		boolean policy = true;
+		CacheBlock x = null;
+		int offsetBits = (int) (Math.log(caches[0].getLineSize()) / Math.log(2));
+		int offset = (int) (address % Math.pow(2, offsetBits));
 		for (int i = 0; i < caches.length; i++) {
+
 			instructionAccessTime += caches[i].getAccessTime();
 			totalAccessTime += caches[i].getAccessTime();
 			setLatestAccessTime(instructionAccessTime);
-			int offset = (int) (Math.log(caches[i].getLineSize()) / Math.log(2));
-			int index = (int) (Math.log(caches[i].getNumberOfLines()
+			int index = (int) (address / Math.pow(2, offsetBits))
+					% caches[i].getSets().length;
+			int indexBits = (int) (Math.log(caches[i].getNumberOfLines()
 					/ caches[i].getmWays()) / Math.log(2));
-			int tag = (int) (address / (Math.pow(2, offset) * Math
-					.pow(2, index)));
-			CacheBlock x = caches[i].write(data, index, tag);
-			if (x != null)
-				if (caches[i].getPolicy().equals(WritingPolicy.WRITE_THROUGH)
-						|| x.isDirty())
-					writeInLowerLevel(x, ++i, address);
-			policy = (caches[i].getPolicy() == WritingPolicy.WRITE_THROUGH);
+			int tag = (int) (address / Math.pow(2, offsetBits) / Math.pow(2,
+					indexBits));
+			Byte dataCloned = (Byte) data.clone();
+			x = caches[i].writeByte(dataCloned, index, tag, offset);
+
+			if (x != null) {
+				int c = i;
+				writeInLowerLevel(x, ++c, address);
+
+				Byte[] y = new Byte[x.getData().length];
+				for (int z = 0; z < y.length; z++)
+					if (x.getData()[z] != null)
+						y[z] = (Byte) x.getData()[z].clone();
+				c = i;
+				writeInUpperLevel(x.getData(), --c, address);
+				return;
+			}
 		}
-		if (policy)
-			mainMemory.write(data, address);
+		if (x == null) {
+			Byte[] y = mainMemory.writeByte(data, address, offset,
+					caches[0].getLineSize());
+			writeInUpperLevel(y, caches.length - 1, address);
+		}
 	}
 
 	private void writeInLowerLevel(CacheBlock x, int i, int address) {
 		CacheBlock x1 = null;
-		if (i >= caches.length) {
-			mainMemory.write(x.getData(), address);
-		} else {
-			int newOffset = (int) (Math.log(caches[i].getLineSize()) / Math
+		Byte[] y = new Byte[x.getData().length];
+		for (int z = 0; z < y.length; z++)
+			if (x.getData()[z] != null)
+				y[z] = (Byte) x.getData()[z].clone();
+		if (i >= caches.length - 1) {
+			mainMemory.write(y, address);
+			return;
+		} else if (caches[i - 1].getPolicy()
+				.equals(WritingPolicy.WRITE_THROUGH)) {
+			int offsetBits = (int) (Math.log(caches[0].getLineSize()) / Math
 					.log(2));
-			int newIndex = (int) (Math.log(caches[i].getNumberOfLines()
+			int newIndex = (int) (address / Math.pow(2, offsetBits))
+					% caches[i].getSets().length;
+			int indexBits = (int) (Math.log(caches[i].getNumberOfLines()
 					/ caches[i].getmWays()) / Math.log(2));
-			int newTag = (int) (address / (Math.pow(2, newOffset) * Math.pow(2,
-					newIndex)));
-			x1 = caches[i].write(x.getData(), newIndex, newTag);
+			int newTag = (int) (address / Math.pow(2, offsetBits) / Math.pow(2,
+					indexBits));
+			int c = i;
+			x1 = caches[i].write(y, newIndex, newTag);
 			if (x1 != null)
-				if (caches[i].getPolicy().equals(WritingPolicy.WRITE_THROUGH)
-						|| x.isDirty())
-					writeInLowerLevel(x1, ++i, address);
+				writeInLowerLevel(x1, ++c, address);
+			c = i;
+			if (caches[i].getPolicy().equals(WritingPolicy.WRITE_THROUGH))
+				writeInLowerLevel(x, ++c, address);
 		}
 	}
 }

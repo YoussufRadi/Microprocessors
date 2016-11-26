@@ -34,37 +34,61 @@ public class CacheSet {
 		this.setLineSize(lineSize);
 	}
 
-	public Byte fetch(int tag, int offset) throws RuntimeException {
+	public Byte[] fetch(int tag) throws RuntimeException {
 		for (int i = 0; i < this.blocks.size(); i++)
 			if (blocks.get(i).getTag() == tag) {
 				if (LRUList.contains(blocks.get(i)))
 					LRUList.remove(blocks.get(i));
 				LRUList.add(blocks.get(i));
-				return blocks.get(i).getData(offset);
+				return blocks.get(i).getData();
 			}
 		throw new CacheMissException("Miss");
 	}
 
-	public CacheBlock write(Byte[] data, int tag) {
-		CacheBlock x = new CacheBlock(data, tag);
+	public CacheBlock write(Byte[] data, int tag, WritingPolicy policy) {
+		CacheBlock x = new CacheBlock(data.clone(), tag);
 		CacheBlock y = null;
+
 		for (int i = 0; i < LRUList.size(); i++) {
 			if (LRUList.get(i).getTag() == tag)
 				LRUList.remove(i);
 		}
 		LRUList.add(x);
+
 		for (int i = 0; i < blocks.size(); i++) {
 			if (blocks.get(i).getTag() == tag) {
 				blocks.get(i).setData(data);
 				blocks.get(i).setDirty(true);
-				return y;
+				if (policy.equals(WritingPolicy.WRITE_THROUGH))
+					return blocks.get(i);
+				else
+					return y;
 			}
 		}
-		if (blocks.size() > lineSize) {
+		if (blocks.size() >= lineSize) {
 			y = LRUList.remove(0);
 			blocks.remove(y);
 		}
 		blocks.add(x);
-		return y;
+		if (policy.equals(WritingPolicy.WRITE_THROUGH)
+				|| (policy.equals(WritingPolicy.WRITE_BACK) && x.isDirty()))
+			return x;
+		else
+			return null;
+	}
+
+	public CacheBlock writeByte(Byte data, int tag, int offset) {
+		CacheBlock x = null;
+		for (int i = 0; i < blocks.size(); i++) {
+			x = blocks.get(i);
+			if (x.getTag() == tag) {
+				x.setData(data, offset);
+				x.setDirty(true);
+				LRUList.remove(x);
+				LRUList.add(x);
+				return x;
+			}
+		}
+		return null;
 	}
 }
