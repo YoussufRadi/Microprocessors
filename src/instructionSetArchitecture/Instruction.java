@@ -1,5 +1,6 @@
 package instructionSetArchitecture;
 
+import memoryHierarchy.Word;
 import tomasulo.Simulator;
 
 public class Instruction {
@@ -9,6 +10,7 @@ public class Instruction {
 	private String regB;
 	private String regC;
 	private String imm;
+	private int accessTime;
 
 	public String getType() {
 		return type;
@@ -76,7 +78,37 @@ public class Instruction {
 			break;
 		}
 	}
-	
+
+	public void lw(String rA_str, String rB_str, String imm_str) {
+		int rA_index = getRegIndex(rA_str);
+		int rB_index = getRegIndex(rB_str);
+		int immediate = Integer.parseInt(imm_str);
+
+		int rB_value = Simulator.ISA_regs.readReg(rB_index);
+		int address = immediate + rB_value;
+
+		String word = Simulator.dataMemory.fetch(address).getData();
+		int value = Integer.parseInt(word);
+		Simulator.ISA_regs.writeReg(rA_index, value);
+
+		this.accessTime = Simulator.dataMemory.getLatestAccessTime();
+	}
+
+	public void sw(String rA_str, String rB_str, String imm_str) {
+		int rA_index = getRegIndex(rA_str);
+		int rB_index = getRegIndex(rB_str);
+		int immediate = Integer.parseInt(imm_str);
+		
+		int rA_value = Simulator.ISA_regs.readReg(rA_index);
+		int rB_value = Simulator.ISA_regs.readReg(rB_index);
+		int address = immediate + rB_value;
+		
+		String word = ""+rA_value;
+		Simulator.dataMemory.write(new Word(word), address);
+		
+		this.accessTime = Simulator.dataMemory.getLatestAccessTime();
+	}
+
 	public void add(String rA_str, String rB_str, String rC_str) {
 
 		int rA_index = getRegIndex(rA_str);
@@ -235,11 +267,11 @@ public class Instruction {
 		return Integer.parseInt(imm);
 
 	}
-	
-	public int getAccessTime(){
-		return 0;
-	}
 
+	public int getAccessTime() {
+
+		return this.accessTime;
+	}
 
 	public static void main(String[] args) {
 		String instruction = "BEQ r4 r1 80";
