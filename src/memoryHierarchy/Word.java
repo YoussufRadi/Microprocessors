@@ -4,7 +4,7 @@ public class Word implements Cloneable { // 3ashan 5ater Hazem :D
 
 	private String data;
 
-	public Object getData() {
+	public String getData() {
 		return data;
 	}
 

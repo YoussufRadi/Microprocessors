@@ -4,8 +4,8 @@ public class MemoryHierarchy {
 
 	private Memory mainMemory;
 	private Cache[] caches;
-	private static int totalAccessTime;
-	private static int latestAccessTime;
+	private int totalAccessTime;
+	private int latestAccessTime;
 
 	public Memory getMainMemory() {
 		return mainMemory;
@@ -23,20 +23,20 @@ public class MemoryHierarchy {
 		this.caches = caches;
 	}
 
-	public static int getTotalAccessTime() {
-		return totalAccessTime;
+	public int getTotalAccessTime() {
+		return this.totalAccessTime;
 	}
 
-	public static int getLatestAccessTime() {
-		return latestAccessTime;
+	public int getLatestAccessTime() {
+		return this.latestAccessTime;
 	}
 
-	public static void setLatestAccessTime(int latestAccessTime) {
-		MemoryHierarchy.latestAccessTime = latestAccessTime;
+	public void setLatestAccessTime(int latestAccessTime) {
+		this.latestAccessTime = latestAccessTime;
 	}
 
-	public static void setTotalAccessTime(int totalAccessTime) {
-		MemoryHierarchy.totalAccessTime = totalAccessTime;
+	public void setTotalAccessTime(int totalAccessTime) {
+		this.totalAccessTime = totalAccessTime;
 	}
 
 	// Main Simulator Class will create the caches array and pass it to the
