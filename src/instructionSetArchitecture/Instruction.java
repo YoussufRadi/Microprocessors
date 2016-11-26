@@ -231,7 +231,7 @@ public class Instruction {
 	}
 
 	public int getImm() {
-		
+
 		return Integer.parseInt(imm);
 
 	}
