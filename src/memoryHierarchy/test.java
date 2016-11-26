@@ -13,8 +13,8 @@ public class test {
 		 
 		 MemoryHierarchy main = new MemoryHierarchy( new Cache[] {c, c1 ,c2}, 50);
 //		 System.out.println(main.getCaches().length);
-		 main.write(new Byte("Hi"), 4000);
-		 main.write(new Byte("Bye"), 4000);
+		 main.write(new Word("Hi"), 4000);
+		 main.write(new Word("Bye"), 4000);
 //		 System.out.println(main.getMainMemory().getData()[4000].getData());
 		 System.out.println(c.getSets()[0].getBlocks().get(0).getData()[0].getData());
 		 System.out.println(c1.getSets()[0].getBlocks().get(0).getData()[0].getData());

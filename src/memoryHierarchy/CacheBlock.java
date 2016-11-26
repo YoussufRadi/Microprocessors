@@ -2,16 +2,16 @@ package memoryHierarchy;
 
 public class CacheBlock implements Cloneable {
 
-	private Byte[] data;
+	private Word[] data;
 	private int tag;
 	private boolean dirty;
 	private boolean valid;
 
-	public Byte[] getData() {
+	public Word[] getData() {
 		return data;
 	}
 
-	public void setData(Byte[] data) {
+	public void setData(Word[] data) {
 		this.data = data;
 	}
 
@@ -40,14 +40,14 @@ public class CacheBlock implements Cloneable {
 	}
 
 	
-	public CacheBlock(Byte[] data, int tag) {
+	public CacheBlock(Word[] data, int tag) {
 		this.data = data;
 		this.tag = tag;
 		this.dirty = false;
 		this.valid = true;
 	}
 
-	public void setData(Byte data, int offset) {
+	public void setData(Word data, int offset) {
 		this.data[offset] = data;
 	}
 
