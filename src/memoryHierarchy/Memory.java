@@ -1,14 +1,14 @@
 package memoryHierarchy;
 
 public class Memory {
-	private Byte[] data;
+	private Word[] data;
 	private int accessTime;
 
-	public Byte[] getData() {
+	public Word[] getData() {
 		return data;
 	}
 
-	public void setData(Byte[] data) {
+	public void setData(Word[] data) {
 		this.data = data;
 	}
 
@@ -22,24 +22,24 @@ public class Memory {
 
 	public Memory(int accessTime) {
 		this.accessTime = accessTime;
-		this.data = new Byte[65536];
+		this.data = new Word[32768];
 	}
 
-	public Byte[] fetch(int address, int offset, int lineSize) {
-		Byte[] x  = new Byte[lineSize];
+	public Word[] fetch(int address, int offset, int lineSize) {
+		Word[] x  = new Word[lineSize];
 		for(int i = 0; i < lineSize; i++)
 			x[i] = this.data[address - offset + i];
 		return x;
 	}
 
-	public void write(Byte[] data, int address) {
+	public void write(Word[] data, int address) {
 		for (int i = 0; i < data.length; i++)
 			this.data[address+i] = data[i];
 	}
 	
-	public Byte[] writeByte(Byte data, int address, int offset , int lineSize) {
+	public Word[] writeByte(Word data, int address, int offset , int lineSize) {
 		this.data[address] = data;
-		Byte[] x  = new Byte[lineSize];
+		Word[] x  = new Word[lineSize];
 		for(int i = 0; i < lineSize; i++)
 			x[i] = this.data[address - offset + i];
 		return x;

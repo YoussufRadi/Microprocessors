@@ -46,12 +46,12 @@ public class MemoryHierarchy {
 		this.caches = caches;
 	}
 
-	public Byte fetch(int address) throws RuntimeException {
+	public Word fetch(int address) throws RuntimeException {
 		int offsetBits = (int) (Math.log(caches[0].getLineSize()) / Math
 				.log(2));
 		int offset = (int) (address % Math.pow(2, offsetBits));
 		int instructionAccessTime = 0;
-		Byte[] x = null;
+		Word[] x = null;
 		for (int i = 0; i < caches.length; i++) {
 			instructionAccessTime += caches[i].getAccessTime();
 			
@@ -78,7 +78,7 @@ public class MemoryHierarchy {
 		return x[offset];
 	}
 
-	private void writeInUpperLevel(Byte[] bytes, int j, int address) {
+	private void writeInUpperLevel(Word[] bytes, int j, int address) {
 		if (j < 0)
 			return;
 		int offsetBits = (int) (Math.log(caches[0].getLineSize()) / Math.log(2));
@@ -98,7 +98,7 @@ public class MemoryHierarchy {
 
 	}
 
-	public void write(Byte data, int address) {
+	public void write(Word data, int address) {
 		int instructionAccessTime = 0;
 		CacheBlock x = null;
 		int offsetBits = (int) (Math.log(caches[0].getLineSize()) / Math.log(2));
@@ -114,24 +114,24 @@ public class MemoryHierarchy {
 					/ caches[i].getmWays()) / Math.log(2));
 			int tag = (int) (address / Math.pow(2, offsetBits) / Math.pow(2,
 					indexBits));
-			Byte dataCloned = (Byte) data.clone();
+			Word dataCloned = (Word) data.clone();
 			x = caches[i].writeByte(dataCloned, index, tag, offset);
 
 			if (x != null) {
 				int c = i;
 				writeInLowerLevel(x, ++c, address);
 
-				Byte[] y = new Byte[x.getData().length];
+				Word[] y = new Word[x.getData().length];
 				for (int z = 0; z < y.length; z++)
 					if (x.getData()[z] != null)
-						y[z] = (Byte) x.getData()[z].clone();
+						y[z] = (Word) x.getData()[z].clone();
 				c = i;
 				writeInUpperLevel(x.getData(), --c, address);
 				return;
 			}
 		}
 		if (x == null) {
-			Byte[] y = mainMemory.writeByte(data, address, offset,
+			Word[] y = mainMemory.writeByte(data, address, offset,
 					caches[0].getLineSize());
 			writeInUpperLevel(y, caches.length - 1, address);
 		}
@@ -139,10 +139,10 @@ public class MemoryHierarchy {
 
 	private void writeInLowerLevel(CacheBlock x, int i, int address) {
 		CacheBlock x1 = null;
-		Byte[] y = new Byte[x.getData().length];
+		Word[] y = new Word[x.getData().length];
 		for (int z = 0; z < y.length; z++)
 			if (x.getData()[z] != null)
-				y[z] = (Byte) x.getData()[z].clone();
+				y[z] = (Word) x.getData()[z].clone();
 		if (i >= caches.length - 1) {
 			mainMemory.write(y, address);
 			return;

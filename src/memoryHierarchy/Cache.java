@@ -81,18 +81,18 @@ public class Cache {
 			sets[i] = new CacheSet(mWays, lineSize);
 	}
 
-	public Byte[] fetch(int index, int tag) throws RuntimeException {
+	public Word[] fetch(int index, int tag) throws RuntimeException {
 		if (index > this.sets.length)
 			throw new StructuralException("Out of bounds");
 		else
 			return sets[index].fetch(tag);
 	}
 
-	public CacheBlock write(Byte[] data, int index, int tag) {
+	public CacheBlock write(Word[] data, int index, int tag) {
 		return sets[index].write(data, tag , this.policy);
 	}
 	
-	public CacheBlock writeByte(Byte data, int index, int tag, int offset) {
+	public CacheBlock writeByte(Word data, int index, int tag, int offset) {
 		return sets[index].writeByte(data, tag, offset);
 	}
 

@@ -10,6 +10,10 @@ public class Instruction {
 	private String regC;
 	private String imm;
 
+	public String getType() {
+		return type;
+	}
+
 	public Instruction(String instruction) {
 
 		String[] fields = instruction.split(" ");
@@ -43,25 +47,33 @@ public class Instruction {
 			break;
 		case "SW":
 			break;
-		case "JMP": jmp(this.regA, this.imm);
+		case "JMP":
+			jmp(this.regA, this.imm);
 			break;
-		case "BEQ": beq(this.regA, this.regB, this.imm);
+		case "BEQ":
+			beq(this.regA, this.regB, this.imm);
 			break;
-		case "JALR": jalr(this.regA, this.regB);
+		case "JALR":
+			jalr(this.regA, this.regB);
 			break;
-		case "RET": ret(this.regA);
+		case "RET":
+			ret(this.regA);
 			break;
-		case "ADD": add(this.regA, this.regB, this.regC);
+		case "ADD":
+			add(this.regA, this.regB, this.regC);
 			break;
-		case "SUB": sub(this.regA, this.regB, this.regC);
+		case "SUB":
+			sub(this.regA, this.regB, this.regC);
 			break;
-		case "ADDI": addImm(this.regA, this.regB, this.imm);
+		case "ADDI":
+			addImm(this.regA, this.regB, this.imm);
 			break;
-		case "NAND": nand(this.regA, this.regB, this.regC);
+		case "NAND":
+			nand(this.regA, this.regB, this.regC);
 			break;
-		case "MUL": mul(this.regA, this.regB, this.regC);
+		case "MUL":
+			mul(this.regA, this.regB, this.regC);
 			break;
-
 		}
 	}
 	
@@ -190,7 +202,7 @@ public class Instruction {
 		return null;
 	}
 
-	public Register getVJ() {
+	public Register getVj() {
 
 		if (this.type.equals("LW") || this.type.equals("JALR")
 				|| this.type.equals("ADD") || this.type.equals("SUB")
@@ -203,15 +215,15 @@ public class Instruction {
 		return Simulator.ISA_regs.getRegisters()[rA_index];
 
 	}
-	
-	public Register getVK(){
-		
-		if(this.type.equals("SW") || this.type.equals("BEQ")){
+
+	public Register getVk() {
+
+		if (this.type.equals("SW") || this.type.equals("BEQ")) {
 			int rB_index = getRegIndex(this.regB);
 			return Simulator.ISA_regs.getRegisters()[rB_index];
 		}
-		if(this.type.equals("ADD") || this.type.equals("SUB")
-				|| this.type.equals("NAND") || this.type.equals("MUL")){
+		if (this.type.equals("ADD") || this.type.equals("SUB")
+				|| this.type.equals("NAND") || this.type.equals("MUL")) {
 			int rC_index = getRegIndex(this.regC);
 			return Simulator.ISA_regs.getRegisters()[rC_index];
 		}
@@ -219,7 +231,9 @@ public class Instruction {
 	}
 
 	public int getImm() {
-		return Integer.parseInt(this.imm);
+		
+		return Integer.parseInt(imm);
+
 	}
 
 

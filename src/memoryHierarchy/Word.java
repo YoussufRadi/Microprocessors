@@ -1,6 +1,6 @@
 package memoryHierarchy;
 
-public class Byte implements Cloneable { // 3ashan 5ater Hazem :D
+public class Word implements Cloneable { // 3ashan 5ater Hazem :D
 
 	private String data;
 
@@ -12,18 +12,18 @@ public class Byte implements Cloneable { // 3ashan 5ater Hazem :D
 		this.data = data;
 	}
 
-	public Byte() {
+	public Word() {
 		this.data = new String();
 	}
 
-	public Byte(String data) {
+	public Word(String data) {
 		this.data = data;
 	}
 
-	protected Byte clone() {
-		Byte cloned = null;
+	protected Word clone() {
+		Word cloned = null;
 		try {
-			cloned = (Byte) super.clone();
+			cloned = (Word) super.clone();
 		} catch (CloneNotSupportedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
