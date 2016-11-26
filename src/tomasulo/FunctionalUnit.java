@@ -9,7 +9,7 @@ public class FunctionalUnit {
 
 	private String name;
 	private int numberOfInstances;
-	private int execTime;
+	private int[] execTime;
 	private int unitCount;
 	private int[] start;
 	private boolean[] busy;
@@ -34,7 +34,9 @@ public class FunctionalUnit {
 	public FunctionalUnit(String name, int numberOfInstances, int execTime) {
 		this.name = name;
 		this.numberOfInstances = numberOfInstances;
-		this.execTime = execTime;
+		this.execTime = new int[numberOfInstances];
+		for (int i = 0; i < numberOfInstances; i++)
+			this.execTime[i] = execTime;
 		this.unitCount = 0;
 		this.start = new int[numberOfInstances];
 		for (int i = 0; i < numberOfInstances; i++)
@@ -86,6 +88,9 @@ public class FunctionalUnit {
 		if (Op[unit].getVj().getUnitUsing() == null
 				|| (Op[unit].getVk() != null && Op[unit].getVk().getUnitUsing() == null))
 			return;
+		Op[unit].execute();
+		if (name.equals("LOAD") || name.equals("STORE"))
+			execTime[unit] = Op[unit].getAccessTime();
 		start[unit] = clockCycle;
 		Vj[unit] = Op[unit].getVj();
 		if (Op[unit].getVk() != null)
@@ -98,7 +103,6 @@ public class FunctionalUnit {
 		start[i] = -1;
 		busy[unitCount] = false;
 		writeResult.add(Op[i]);
-		Op[i].execute();
 		Op[i].getDestination().setUnitUsing(null);
 		Op[i] = null;
 		Vj[i] = null;
@@ -112,7 +116,7 @@ public class FunctionalUnit {
 		if (isEmpty())
 			return;
 		for (int i = 0; i < unitCount; i++) {
-			int cyclesLeft = start[i] + execTime - clockCycle;
+			int cyclesLeft = start[i] + execTime[i] - clockCycle;
 			if (start[i] == -1)
 				executeNewInstruction(clockCycle, i);
 			else if (cyclesLeft == 0)

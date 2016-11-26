@@ -237,6 +237,10 @@ public class Instruction {
 	public void setImm(String imm) {
 		this.imm = imm;
 	}
+	
+	public int getAccessTime(){
+		return 0;
+	}
 
 	public static void main(String[] args) {
 		String instruction = "BEQ r4 r1 80";
