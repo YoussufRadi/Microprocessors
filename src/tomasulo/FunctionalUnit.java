@@ -20,7 +20,8 @@ public class FunctionalUnit {
 	private FunctionalUnit[] Qk;
 	private FunctionalUnit[] dest;
 	private int[] A;
-	private ArrayList<Instruction> writeResult; //need to be modified with ROB number
+	private ArrayList<Instruction> writeResult; // need to be modified with ROB
+												// number
 
 	public String getName() {
 		return name;
@@ -59,9 +60,9 @@ public class FunctionalUnit {
 			return true;
 		return false;
 	}
-	
+
 	public boolean hasOutput() {
-		if(writeResult.size() == 0)
+		if (writeResult.size() == 0)
 			return false;
 		return true;
 	}
@@ -73,20 +74,22 @@ public class FunctionalUnit {
 		Op[unitCount] = instruction;
 		Qj[unitCount] = Vj[unitCount].getUnitUsing();
 		Qk[unitCount] = Vk[unitCount].getUnitUsing();
-		// instruction.getDest().setUnitUsing(this);
+		if (instruction.getDestination() != null)
+			instruction.getDestination().setUnitUsing(this);
 		dest[unitCount] = this;
-		A[unitCount] = 0;// instruction.getImm();
+		A[unitCount] = instruction.getImm();
 		unitCount++;
 		return true;
 	}
 
 	public void executeNewInstruction(int clockCycle, int unit) {
-		// if(instruction.getVj().getUnitUsing() != null ||
-		// instruction.getVk().getUnitUsing() != null )
-		// return;
+		if (Op[unit].getVj().getUnitUsing() == null
+				|| (Op[unit].getVk() != null && Op[unit].getVk().getUnitUsing() == null))
+			return;
 		start[unit] = clockCycle;
-		Vj[unit] = null;// instruction.getVj();
-		Vk[unit] = null;// instruction.getVk();
+		Vj[unit] = Op[unit].getVj();
+		if (Op[unit].getVk() != null)
+			Vk[unit] = Op[unit].getVk();
 		Qj[unit] = null;
 		Qk[unit] = null;
 	}
@@ -94,8 +97,9 @@ public class FunctionalUnit {
 	public void write(int i) {
 		start[i] = -1;
 		busy[unitCount] = false;
-		// Op[unitCount].excute();
-		// Op[i].getDest().setUnitUsing(null);
+		writeResult.add(Op[i]);
+		Op[i].execute();
+		Op[i].getDestination().setUnitUsing(null);
 		Op[i] = null;
 		Vj[i] = null;
 		Vk[i] = null;
@@ -109,9 +113,9 @@ public class FunctionalUnit {
 			return;
 		for (int i = 0; i < unitCount; i++) {
 			int cyclesLeft = start[i] + execTime - clockCycle;
-			if(start[i] == -1)
+			if (start[i] == -1)
 				executeNewInstruction(clockCycle, i);
-			else if(cyclesLeft == 0)
+			else if (cyclesLeft == 0)
 				write(i);
 		}
 	}

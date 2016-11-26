@@ -1,5 +1,7 @@
 package tomasulo;
 
+import instructionSetArchitecture.Instruction;
+
 public class ReservationStation {
 
 	private FunctionalUnit load;
@@ -30,5 +32,45 @@ public class ReservationStation {
 		addI = new FunctionalUnit("ADDI", addINum, addITime);
 		nand = new FunctionalUnit("NAND", nandNum, nandTime);
 		mul = new FunctionalUnit("MUL", mulNum, mulTime);
+	}
+
+	public boolean issue(Instruction instruction) {
+		boolean done = false;
+		switch (instruction.getType()) {
+		case "LW":
+			done = load.issue(instruction);
+			break;
+		case "SW":
+			done = store.issue(instruction);
+			break;
+		case "JMP":
+			done = jmp.issue(instruction);
+			break;
+		case "BEQ":
+			done = beq.issue(instruction);
+			break;
+		case "JALR":
+			done = jalr.issue(instruction);
+			break;
+		case "RET":
+			done = ret.issue(instruction);
+			break;
+		case "ADD":
+			done = add.issue(instruction);
+			break;
+		case "SUB":
+			done = sub.issue(instruction);
+			break;
+		case "ADDI":
+			done = addI.issue(instruction);
+			break;
+		case "NAND":
+			done = nand.issue(instruction);
+			break;
+		case "MUL":
+			done = mul.issue(instruction);
+			break;
+		}
+		return done;
 	}
 }
