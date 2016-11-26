@@ -1,5 +1,7 @@
 package tomasulo;
 
+import java.util.ArrayList;
+
 import instructionSetArchitecture.Instruction;
 
 public class ReservationStation {
@@ -15,6 +17,9 @@ public class ReservationStation {
 	private FunctionalUnit addI;
 	private FunctionalUnit nand;
 	private FunctionalUnit mul;
+	private FunctionalUnit[] allStations = { load, store, jmp, beq, jalr, ret,
+			add, sub, addI, nand, mul };
+	private ArrayList<Instruction> dataToCommit;
 
 	public ReservationStation(int loadNum, int loadTime, int storeNum,
 			int storeTime, int jmpNum, int jmpTime, int beqNum, int beqTime,
@@ -72,5 +77,17 @@ public class ReservationStation {
 			break;
 		}
 		return done;
+	}
+
+	public void execute(int clockCycle) {
+		for (int i = 0; i < allStations.length; i++)
+			allStations[i].execute(clockCycle);
+	}
+
+	public void write() {
+		for (int i = 0; i < allStations.length; i++)
+			if (allStations[i].hasOutput())
+				for (int j = 0; j < allStations[i].resultSize(); j++)
+					dataToCommit.add(allStations[i].extractWriteResult(j) );
 	}
 }

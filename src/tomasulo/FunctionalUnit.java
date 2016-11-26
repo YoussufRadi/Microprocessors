@@ -23,14 +23,6 @@ public class FunctionalUnit {
 	private ArrayList<Instruction> writeResult; // need to be modified with ROB
 												// number
 
-	public String getName() {
-		return name;
-	}
-
-	public ArrayList<Instruction> getWriteResult() {
-		return writeResult;
-	}
-
 	public FunctionalUnit(String name, int numberOfInstances, int execTime) {
 		this.name = name;
 		this.numberOfInstances = numberOfInstances;
@@ -50,6 +42,25 @@ public class FunctionalUnit {
 		this.A = new int[numberOfInstances];
 		this.writeResult = new ArrayList<Instruction>();
 	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public boolean hasOutput() {
+		if (writeResult.size() == 0)
+			return false;
+		return true;
+	}
+	
+	public int resultSize(){
+		return writeResult.size();
+	}
+	public Instruction extractWriteResult(int i) {
+		Instruction y = writeResult.get(i);
+		writeResult.remove(i);
+		return y;
+	}
 
 	public boolean isFull() {
 		if (unitCount == numberOfInstances)
@@ -63,11 +74,6 @@ public class FunctionalUnit {
 		return false;
 	}
 
-	public boolean hasOutput() {
-		if (writeResult.size() == 0)
-			return false;
-		return true;
-	}
 
 	public boolean issue(Instruction instruction) {
 		if (isFull())
@@ -100,9 +106,9 @@ public class FunctionalUnit {
 	}
 
 	public void write(int i) {
+		writeResult.add(Op[i]);
 		start[i] = -1;
 		busy[unitCount] = false;
-		writeResult.add(Op[i]);
 		Op[i].getDestination().setUnitUsing(null);
 		Op[i] = null;
 		Vj[i] = null;
@@ -112,7 +118,7 @@ public class FunctionalUnit {
 		unitCount--;
 	}
 
-	public void executeExistingInstruction(int clockCycle) {
+	public void execute(int clockCycle) {
 		if (isEmpty())
 			return;
 		for (int i = 0; i < unitCount; i++) {
