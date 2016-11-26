@@ -64,7 +64,7 @@ public class Instruction {
 
 		}
 	}
-
+	
 	public void add(String rA_str, String rB_str, String rC_str) {
 
 		int rA_index = getRegIndex(rA_str);
@@ -218,13 +218,10 @@ public class Instruction {
 		return null;
 	}
 
-	public String getImm() {
-		return imm;
+	public int getImm() {
+		return Integer.parseInt(this.imm);
 	}
 
-	public void setImm(String imm) {
-		this.imm = imm;
-	}
 
 	public static void main(String[] args) {
 		String instruction = "BEQ r4 r1 80";
