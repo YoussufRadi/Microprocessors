@@ -3,7 +3,12 @@ package GUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -57,7 +62,7 @@ public class TomasuloSimulator extends JFrame {
 		this.setTitle("Tomasulo Simulator");
 		this.setResizable(false);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		launchPanelTwo();
+		launchPanelOne();
 		
 	}
 	
@@ -71,8 +76,6 @@ public class TomasuloSimulator extends JFrame {
 		chooseFile = new JButton("Choose File");
 		chooseFile.setBounds(20,70,100,35);
 		chooseFile.addActionListener(new ActionListener() {
-			
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser chooser = new JFileChooser();
 				chooser.showOpenDialog(null);
@@ -185,7 +188,7 @@ public class TomasuloSimulator extends JFrame {
 	}
 	
 	public void launchPanelTwo(){
-//		this.remove(panelOne);
+		this.remove(panelOne);
 		
 		iCacheLevels = 2;
 		dCacheLevels = 2;
@@ -286,17 +289,25 @@ public class TomasuloSimulator extends JFrame {
 						sdValues[i] = Integer.parseInt(sd[i].getText());
 						mdValues[i] = Integer.parseInt(md[i].getText());
 					}
-					System.out.println("Line Size for I = "+iLineSize);
-					System.out.println("Line Size for D = "+dLineSize);
-					System.out.println("");
-					for(int i = 0; i < iCacheLevels; i++)
-						System.out.println(siValues[i]);
-					for(int i = 0; i < iCacheLevels; i++)
-						System.out.println(miValues[i]);
-					for(int i = 0; i < dCacheLevels; i++)
-						System.out.println(sdValues[i]);
-					for(int i = 0; i < dCacheLevels; i++)
-						System.out.println(mdValues[i]);
+					BufferedReader br = new BufferedReader(new FileReader(programFile));
+					ArrayList<String> program = new ArrayList<>();
+					String line = "";
+					while ((line = br.readLine()) != null) {
+						System.out.println(line);
+						program.add(line);
+					}
+						
+//					System.out.println("Line Size for I = "+iLineSize);
+//					System.out.println("Line Size for D = "+dLineSize);
+//					System.out.println("");
+//					for(int i = 0; i < iCacheLevels; i++)
+//						System.out.println(siValues[i]);
+//					for(int i = 0; i < iCacheLevels; i++)
+//						System.out.println(miValues[i]);
+//					for(int i = 0; i < dCacheLevels; i++)
+//						System.out.println(sdValues[i]);
+//					for(int i = 0; i < dCacheLevels; i++)
+//						System.out.println(mdValues[i]);
 				}
 				catch(Exception e1){
 					error.setVisible(true);
