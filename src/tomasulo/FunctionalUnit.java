@@ -96,7 +96,7 @@ public class FunctionalUnit {
 	}
 
 	public void executeNewInstruction(int clockCycle, int unit) {
-		if (Qj[unit] != -1 || Qk[unit] == -1)
+		if (Qj[unit] != -1 || Qk[unit] != -1)
 			return;
 		Op[unit].execute();
 		if (name.equals("LOAD") || name.equals("STORE"))
@@ -112,7 +112,8 @@ public class FunctionalUnit {
 	public void write(int i) {
 		writeResult.add(dest[i]);
 		start[i] = -1;
-		busy[unitCount] = false;
+		busy[i] = false;
+		System.out.println("write in " + ((Register) Op[i].getDestination()).getName() + " value : " + ((Register) Op[i].getDestination()).getValue());
 		if (Op[i].getDestination() instanceof Register)
 			((Register) Op[i].getDestination()).setROBEnteryUsing(-1);
 		Op[i] = null;

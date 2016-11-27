@@ -2,12 +2,17 @@ package instructionSetArchitecture;
 
 public class Register {
 
+	private String name;
 	private int value;
 	private int ROBEnteryUsing;
 	
-	public Register() {
-		this.value = 0;
+	public Register(String name) {
+		this.value = 3;
 		ROBEnteryUsing = -1;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public Register(int value) {

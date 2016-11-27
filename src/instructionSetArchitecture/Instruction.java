@@ -272,24 +272,24 @@ public class Instruction {
 	}
 
 	public int getImm() {
-
+		if(imm == null)
+			return -1;
 		return Integer.parseInt(imm);
 	}
 
 	public int getAccessTime() {
-
 		return this.accessTime;
 	}
 
-	public static void main(String[] args) {
-		String instruction = "BEQ r4 r1 80";
-		Instruction i0 = new Instruction(instruction);
-		// System.out.println("Type: " + i0.type);
-		// System.out.println("regA: " + i0.regA);
-		// System.out.println("regB: " + i0.regB);
-		// System.out.println("regC: " + i0.regC);
-		// System.out.println("imm: " + i0.imm);
-		System.out.println(getRegIndex(i0.regB));
-	}
+	// public static void main(String[] args) {
+	//String instruction = "BEQ r4 r1 80";
+	//Instruction i0 = new Instruction(instruction);
+	// System.out.println("Type: " + i0.type);
+	// System.out.println("regA: " + i0.regA);
+	// System.out.println("regB: " + i0.regB);
+	// System.out.println("regC: " + i0.regC);
+	// System.out.println("imm: " + i0.imm);
+	// System.out.println(getRegIndex(i0.regB));
+	// }
 
 }

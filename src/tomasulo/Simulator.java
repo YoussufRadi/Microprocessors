@@ -37,7 +37,8 @@ public class Simulator {
 	}
 
 	private void run() {
-		while (run) {
+//		while (run) {
+		while(clockCycle < 30){
 			algorithm.issue(clockCycle);
 			algorithm.execute(clockCycle);
 			algorithm.write(clockCycle);

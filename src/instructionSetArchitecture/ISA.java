@@ -7,7 +7,9 @@ public class ISA {
 
 	public ISA() {
 		registers = new Register[8];
-		PC = new Register();
+		for(int i = 0; i < 8; i++)
+			registers[i] = new Register("R"+i);
+		PC = new Register("PC");
 	}
 
 	public Integer readReg(int index) {

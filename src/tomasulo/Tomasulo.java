@@ -17,6 +17,7 @@ public class Tomasulo {
 		this.numberOfWays = numberOfWays;
 		this.instructionBuffer = new LinkedList<Instruction>();
 		this.sizeBuffer = sizeBuffer;
+		commitData = new ArrayList<Integer>();
 	}
 
 	public boolean isFull() {
@@ -41,7 +42,7 @@ public class Tomasulo {
 	public void issue(int clockCycle) {
 		if (instructionBuffer.isEmpty())
 		//	fetch(); just to test with one instruction
-			instructionBuffer.add(new Instruction("ADD R0, R1, R2"));
+			instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
 		int ROBentry;
 		boolean doneFlag = false;
 		for (int i = 0; i < numberOfWays; i++) {

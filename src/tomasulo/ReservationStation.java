@@ -17,8 +17,7 @@ public class ReservationStation {
 	private FunctionalUnit addI;
 	private FunctionalUnit nand;
 	private FunctionalUnit mul;
-	private FunctionalUnit[] allStations = { load, store, jmp, beq, jalr, ret,
-			add, sub, addI, nand, mul };
+	private FunctionalUnit[] allStations;
 	private ArrayList<Integer> dataToCommit;
 
 	public ReservationStation(int loadNum, int loadTime, int storeNum,
@@ -26,17 +25,18 @@ public class ReservationStation {
 			int jalrNum, int jalrTime, int retNum, int retTime, int addNum,
 			int addTime, int subNum, int subTime, int addINum, int addITime,
 			int nandNum, int nandTime, int mulNum, int mulTime) {
-		load = new FunctionalUnit("LOAD", loadNum, loadTime);
-		store = new FunctionalUnit("STORE", storeNum, storeTime);
-		jmp = new FunctionalUnit("JMP", jmpNum, jmpTime);
-		beq = new FunctionalUnit("BEQ", beqNum, beqTime);
-		jalr = new FunctionalUnit("JALR", jalrNum, jalrTime);
-		ret = new FunctionalUnit("RET", retNum, retTime);
-		add = new FunctionalUnit("ADD", addNum, addTime);
-		sub = new FunctionalUnit("SUB", subNum, subTime);
-		addI = new FunctionalUnit("ADDI", addINum, addITime);
-		nand = new FunctionalUnit("NAND", nandNum, nandTime);
-		mul = new FunctionalUnit("MUL", mulNum, mulTime);
+		allStations = new FunctionalUnit[11];
+		allStations[0] = load = new FunctionalUnit("LOAD", loadNum, loadTime);
+		allStations[1] = store = new FunctionalUnit("STORE", storeNum, storeTime);
+		allStations[2] = jmp = new FunctionalUnit("JMP", jmpNum, jmpTime);
+		allStations[3] = beq = new FunctionalUnit("BEQ", beqNum, beqTime);
+		allStations[4] = jalr = new FunctionalUnit("JALR", jalrNum, jalrTime);
+		allStations[5] = ret = new FunctionalUnit("RET", retNum, retTime);
+		allStations[6] = add = new FunctionalUnit("ADD", addNum, addTime);
+		allStations[7] = sub = new FunctionalUnit("SUB", subNum, subTime);
+		allStations[8] = addI = new FunctionalUnit("ADDI", addINum, addITime);
+		allStations[9] = nand = new FunctionalUnit("NAND", nandNum, nandTime);
+		allStations[10] = mul = new FunctionalUnit("MUL", mulNum, mulTime);
 		dataToCommit = new ArrayList<Integer>();
 	}
 
