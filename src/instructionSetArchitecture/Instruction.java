@@ -1,7 +1,5 @@
 package instructionSetArchitecture;
 
-import java.beans.DesignMode;
-
 import memoryHierarchy.Word;
 import tomasulo.Simulator;
 
@@ -107,7 +105,7 @@ public class Instruction {
 		int rA_value = Simulator.ISA_regs.readReg(rA_index);
 		int rB_value = Simulator.ISA_regs.readReg(rB_index);
 		int address = immediate + rB_value;
-		
+
 		String word = "" + rA_value;
 		Simulator.dataMemory.write(new Word(word), address);
 
@@ -186,7 +184,7 @@ public class Instruction {
 		int rA_value = Simulator.ISA_regs.readReg(rA_index);
 		int pc = Simulator.ISA_regs.getPC();
 		int address = pc + 1 + rA_value + immediate;
-		
+
 		Simulator.ISA_regs.setPC(address);
 		this.destAddress = address;
 	}
@@ -208,7 +206,7 @@ public class Instruction {
 		int rA_index = getRegIndex(rA_str);
 		int rA_value = Simulator.ISA_regs.readReg(rA_index);
 		Simulator.ISA_regs.setPC(rA_value);
-		
+
 		this.destAddress = rA_value;
 	}
 
@@ -237,16 +235,13 @@ public class Instruction {
 	public Object getDestination() {
 		if (this.type.equals("LW") || this.type.equals("ADD")
 				|| this.type.equals("SUB") || this.type.equals("NAND")
-				|| this.type.equals("MUL") || this.type.equals("ADDI") 
+				|| this.type.equals("MUL") || this.type.equals("ADDI")
 				|| this.type.equals("JALR")) {
 			int rA_index = getRegIndex(this.regA);
 			return Simulator.ISA_regs.getRegisters()[rA_index];
-		}
-		else
+		} else
 			return this.destAddress;
 	}
-	
-	
 
 	public Register getVj() {
 

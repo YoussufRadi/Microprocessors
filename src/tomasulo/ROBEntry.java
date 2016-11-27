@@ -1,11 +1,10 @@
 package tomasulo;
 
 import instructionSetArchitecture.Instruction;
-import instructionSetArchitecture.Register;
 
 public class ROBEntry {
 	private String type;
-	private Register dest;
+	private Object dest;
 	private int value;
 	private boolean ready;
 	
@@ -21,7 +20,7 @@ public class ROBEntry {
 		return type;
 	}
 
-	public Register getDest() {
+	public Object getDest() {
 		return dest;
 	}
 

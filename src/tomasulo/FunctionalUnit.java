@@ -21,13 +21,12 @@ public class FunctionalUnit {
 	private int[] dest;
 	private int[] A;
 	private ArrayList<Integer> writeResult; // need to be modified with ROB
-												// number
+											// number
 
 	public FunctionalUnit(String name, int numberOfInstances, int execTime) {
 		this.name = name;
 		this.numberOfInstances = numberOfInstances;
 		this.execTime = new int[numberOfInstances];
-	
 		this.unitCount = 0;
 		this.start = new int[numberOfInstances];
 		this.busy = new boolean[numberOfInstances];
@@ -39,8 +38,8 @@ public class FunctionalUnit {
 		this.dest = new int[numberOfInstances];
 		this.A = new int[numberOfInstances];
 		this.writeResult = new ArrayList<Integer>();
-		
-		for (int i = 0; i < numberOfInstances; i++){
+
+		for (int i = 0; i < numberOfInstances; i++) {
 			this.execTime[i] = execTime;
 			start[i] = -1;
 			Qj[i] = -1;
@@ -89,9 +88,9 @@ public class FunctionalUnit {
 		Qj[unitCount] = Op[unitCount].getVj().getROBEnteryUsing();
 		if (Op[unitCount].getVk() != null)
 			Qk[unitCount] = Op[unitCount].getVk().getROBEnteryUsing();
-		if (instruction.getDestination() instanceof Register ) {
-			instruction.getDestination().setROBEnteryUsing(ROBEntryNumber);
-		}
+		if (instruction.getDestination() instanceof Register)
+			((Register) instruction.getDestination())
+					.setROBEnteryUsing(ROBEntryNumber);
 		dest[unitCount] = ROBEntryNumber;
 		A[unitCount] = instruction.getImm();
 		unitCount++;
@@ -116,7 +115,8 @@ public class FunctionalUnit {
 		writeResult.add(dest[i]);
 		start[i] = -1;
 		busy[unitCount] = false;
-		Op[i].getDestination().setROBEnteryUsing(-1);
+		if (Op[i].getDestination() instanceof Register)
+			((Register) Op[i].getDestination()).setROBEnteryUsing(-1);
 		Op[i] = null;
 		Vj[i] = null;
 		Vk[i] = null;
