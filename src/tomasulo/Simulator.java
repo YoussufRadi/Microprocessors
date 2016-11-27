@@ -38,7 +38,11 @@ public class Simulator {
 
 	private void run() {
 //		while (run) {
+
 		while(clockCycle < 1000){
+
+			algorithm.fetch();
+
 			algorithm.issue(clockCycle);
 			algorithm.execute(clockCycle);
 			algorithm.write(clockCycle);
@@ -53,8 +57,8 @@ public class Simulator {
 		Cache c2 = new Cache(8, 2, 1, WritingPolicy.WRITE_BACK, 5);
 		Cache[] dCach = { c, c1 };
 		Cache[] iCach = { c2 };
-		new Simulator(1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 3, 10, 1, 10,
-				1, 10, 1, 10, 1, 10, iCach, dCach, 50, 10, 1, 10);
+		new Simulator(1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10,
+				1, 10, 1, 10, 1, 10, iCach, dCach, 50, 10, 3, 10);
 
 	}
 }
