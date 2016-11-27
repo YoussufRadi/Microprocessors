@@ -37,7 +37,7 @@ public class ROB {
 		tail = 0;
 	}
 	
-	public int insert(Instruction instruction){
+	public int issue(Instruction instruction){
 		int entryNum = tail;
 		if(isFull())
 			return -1;

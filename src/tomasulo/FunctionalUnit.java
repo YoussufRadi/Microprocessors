@@ -62,10 +62,8 @@ public class FunctionalUnit {
 		return writeResult.size();
 	}
 
-	public int extractWriteResult(int i) {
-		Integer y = writeResult.get(i);
-		writeResult.remove(i);
-		return y;
+	public int extractWriteResult() {
+		return writeResult.remove(0);
 	}
 
 	public boolean isFull() {

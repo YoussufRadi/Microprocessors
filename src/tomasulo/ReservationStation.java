@@ -85,10 +85,19 @@ public class ReservationStation {
 			allStations[i].execute(clockCycle);
 	}
 
-	public void write() {
+	public void getRsultsFromWrite() {
 		for (int i = 0; i < allStations.length; i++)
 			if (allStations[i].hasOutput())
 				for (int j = 0; j < allStations[i].resultSize(); j++)
-					dataToCommit.add(allStations[i].extractWriteResult(j));
+					dataToCommit.add(allStations[i].extractWriteResult());
 	}
+
+	public boolean hasDataToCommit() {
+		return dataToCommit.size() > 0;
+	}
+
+	public int extractDataToCommit() {
+		return dataToCommit.remove(0);
+	}
+
 }
