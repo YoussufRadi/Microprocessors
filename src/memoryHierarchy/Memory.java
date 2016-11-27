@@ -22,7 +22,7 @@ public class Memory {
 
 	public Memory(int accessTime) {
 		this.accessTime = accessTime;
-		this.data = new Word[32768];
+		this.data = new Word[4096];
 	}
 
 	public Word[] fetch(int address, int offset, int lineSize) {

@@ -1,5 +1,6 @@
 package instructionSetArchitecture;
 
+import memoryHierarchy.Word;
 import tomasulo.Simulator;
 
 public class Instruction {
@@ -9,6 +10,8 @@ public class Instruction {
 	private String regB;
 	private String regC;
 	private String imm;
+	private int accessTime;
+	private int destAddress;
 
 	public String getType() {
 		return type;
@@ -44,8 +47,10 @@ public class Instruction {
 	public void execute() {
 		switch (this.type) {
 		case "LW":
+			lw(this.regA, this.regB, this.imm);
 			break;
 		case "SW":
+			sw(this.regA, this.regB, this.imm);
 			break;
 		case "JMP":
 			jmp(this.regA, this.imm);
@@ -76,7 +81,38 @@ public class Instruction {
 			break;
 		}
 	}
-	
+
+	public void lw(String rA_str, String rB_str, String imm_str) {
+		int rA_index = getRegIndex(rA_str);
+		int rB_index = getRegIndex(rB_str);
+		int immediate = Integer.parseInt(imm_str);
+
+		int rB_value = Simulator.ISA_regs.readReg(rB_index);
+		int address = immediate + rB_value;
+
+		String word = Simulator.dataMemory.fetch(address).getData();
+		int value = Integer.parseInt(word);
+		Simulator.ISA_regs.writeReg(rA_index, value);
+
+		this.accessTime = Simulator.dataMemory.getLatestAccessTime();
+	}
+
+	public void sw(String rA_str, String rB_str, String imm_str) {
+		int rA_index = getRegIndex(rA_str);
+		int rB_index = getRegIndex(rB_str);
+		int immediate = Integer.parseInt(imm_str);
+
+		int rA_value = Simulator.ISA_regs.readReg(rA_index);
+		int rB_value = Simulator.ISA_regs.readReg(rB_index);
+		int address = immediate + rB_value;
+
+		String word = "" + rA_value;
+		Simulator.dataMemory.write(new Word(word), address);
+
+		this.accessTime = Simulator.dataMemory.getLatestAccessTime();
+		this.destAddress = address;
+	}
+
 	public void add(String rA_str, String rB_str, String rC_str) {
 
 		int rA_index = getRegIndex(rA_str);
@@ -150,6 +186,7 @@ public class Instruction {
 		int address = pc + 1 + rA_value + immediate;
 
 		Simulator.ISA_regs.setPC(address);
+		this.destAddress = address;
 	}
 
 	public void jalr(String rA_str, String rB_str) {
@@ -169,6 +206,8 @@ public class Instruction {
 		int rA_index = getRegIndex(rA_str);
 		int rA_value = Simulator.ISA_regs.readReg(rA_index);
 		Simulator.ISA_regs.setPC(rA_value);
+
+		this.destAddress = rA_value;
 	}
 
 	public void beq(String rA_str, String rB_str, String imm_str) {
@@ -184,6 +223,7 @@ public class Instruction {
 		if ((isEqual && immediate > 0) || (!isEqual && immediate < 0)) {
 			Simulator.ISA_regs.setPC(pc + 1 + immediate);
 		}
+		this.destAddress = pc + 1 + immediate;
 	}
 
 	public static int getRegIndex(String register) {
@@ -192,14 +232,15 @@ public class Instruction {
 		return regNum_int;
 	}
 
-	public Register getDestination() {
+	public Object getDestination() {
 		if (this.type.equals("LW") || this.type.equals("ADD")
 				|| this.type.equals("SUB") || this.type.equals("NAND")
-				|| this.type.equals("MUL") || this.type.equals("ADDI")) {
+				|| this.type.equals("MUL") || this.type.equals("ADDI")
+				|| this.type.equals("JALR")) {
 			int rA_index = getRegIndex(this.regA);
 			return Simulator.ISA_regs.getRegisters()[rA_index];
-		}
-		return null;
+		} else
+			return this.destAddress;
 	}
 
 	public Register getVj() {
@@ -231,21 +272,24 @@ public class Instruction {
 	}
 
 	public int getImm() {
-		
+		if(imm == null)
+			return -1;
 		return Integer.parseInt(imm);
-
 	}
 
-
-	public static void main(String[] args) {
-		String instruction = "BEQ r4 r1 80";
-		Instruction i0 = new Instruction(instruction);
-		// System.out.println("Type: " + i0.type);
-		// System.out.println("regA: " + i0.regA);
-		// System.out.println("regB: " + i0.regB);
-		// System.out.println("regC: " + i0.regC);
-		// System.out.println("imm: " + i0.imm);
-		System.out.println(getRegIndex(i0.regB));
+	public int getAccessTime() {
+		return this.accessTime;
 	}
+
+	// public static void main(String[] args) {
+	//String instruction = "BEQ r4 r1 80";
+	//Instruction i0 = new Instruction(instruction);
+	// System.out.println("Type: " + i0.type);
+	// System.out.println("regA: " + i0.regA);
+	// System.out.println("regB: " + i0.regB);
+	// System.out.println("regC: " + i0.regC);
+	// System.out.println("imm: " + i0.imm);
+	// System.out.println(getRegIndex(i0.regB));
+	// }
 
 }
