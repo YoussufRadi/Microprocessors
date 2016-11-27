@@ -1,5 +1,7 @@
 package instructionSetArchitecture;
 
+import java.beans.DesignMode;
+
 import memoryHierarchy.Word;
 import tomasulo.Simulator;
 
@@ -11,6 +13,7 @@ public class Instruction {
 	private String regC;
 	private String imm;
 	private int accessTime;
+	private int destAddress;
 
 	public String getType() {
 		return type;
@@ -45,9 +48,11 @@ public class Instruction {
 
 	public void execute() {
 		switch (this.type) {
-		case "LW": lw(this.regA, this.regB, this.imm);
+		case "LW":
+			lw(this.regA, this.regB, this.imm);
 			break;
-		case "SW": sw(this.regA, this.regB, this.imm);
+		case "SW":
+			sw(this.regA, this.regB, this.imm);
 			break;
 		case "JMP":
 			jmp(this.regA, this.imm);
@@ -98,15 +103,16 @@ public class Instruction {
 		int rA_index = getRegIndex(rA_str);
 		int rB_index = getRegIndex(rB_str);
 		int immediate = Integer.parseInt(imm_str);
-		
+
 		int rA_value = Simulator.ISA_regs.readReg(rA_index);
 		int rB_value = Simulator.ISA_regs.readReg(rB_index);
 		int address = immediate + rB_value;
 		
-		String word = ""+rA_value;
+		String word = "" + rA_value;
 		Simulator.dataMemory.write(new Word(word), address);
-		
+
 		this.accessTime = Simulator.dataMemory.getLatestAccessTime();
+		this.destAddress = address;
 	}
 
 	public void add(String rA_str, String rB_str, String rC_str) {
@@ -180,8 +186,9 @@ public class Instruction {
 		int rA_value = Simulator.ISA_regs.readReg(rA_index);
 		int pc = Simulator.ISA_regs.getPC();
 		int address = pc + 1 + rA_value + immediate;
-
+		
 		Simulator.ISA_regs.setPC(address);
+		this.destAddress = address;
 	}
 
 	public void jalr(String rA_str, String rB_str) {
@@ -201,6 +208,8 @@ public class Instruction {
 		int rA_index = getRegIndex(rA_str);
 		int rA_value = Simulator.ISA_regs.readReg(rA_index);
 		Simulator.ISA_regs.setPC(rA_value);
+		
+		this.destAddress = rA_value;
 	}
 
 	public void beq(String rA_str, String rB_str, String imm_str) {
@@ -216,6 +225,7 @@ public class Instruction {
 		if ((isEqual && immediate > 0) || (!isEqual && immediate < 0)) {
 			Simulator.ISA_regs.setPC(pc + 1 + immediate);
 		}
+		this.destAddress = pc + 1 + immediate;
 	}
 
 	public static int getRegIndex(String register) {
@@ -224,15 +234,19 @@ public class Instruction {
 		return regNum_int;
 	}
 
-	public Register getDestination() {
+	public Object getDestination() {
 		if (this.type.equals("LW") || this.type.equals("ADD")
 				|| this.type.equals("SUB") || this.type.equals("NAND")
-				|| this.type.equals("MUL") || this.type.equals("ADDI")) {
+				|| this.type.equals("MUL") || this.type.equals("ADDI") 
+				|| this.type.equals("JALR")) {
 			int rA_index = getRegIndex(this.regA);
 			return Simulator.ISA_regs.getRegisters()[rA_index];
 		}
-		return null;
+		else
+			return this.destAddress;
 	}
+	
+	
 
 	public Register getVj() {
 
@@ -265,7 +279,6 @@ public class Instruction {
 	public int getImm() {
 
 		return Integer.parseInt(imm);
-
 	}
 
 	public int getAccessTime() {
