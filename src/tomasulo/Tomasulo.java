@@ -80,12 +80,6 @@ public class Tomasulo {
 	}
 
 	public void issue(int clockCycle) {
-		System.out.println("----------------------------------");
-		System.out.println("Clock -->"+ Simulator.clockCycle);
-		for(Instruction s : instructionBuffer){
-			System.out.println(s.getType()+" "+s.getDestination());
-		}
-		System.out.println("----------------------------------");
 		int ROBentry;
 		boolean doneFlag = false;
 		for (int i = 0; i < numberOfWays; i++) {
