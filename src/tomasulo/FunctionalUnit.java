@@ -52,6 +52,26 @@ public class FunctionalUnit {
 		return name;
 	}
 
+	public int getNumberOfInstances() {
+		return numberOfInstances;
+	}
+
+	public int getQj(int unit) {
+		return Qj[unit];
+	}
+
+	public void clearQj(int unit) {
+		Qj[unit] = -1;
+	}
+
+	public int getQk(int unit) {
+		return Qk[unit];
+	}
+
+	public void clearQk(int unit) {
+		Qk[unit] = -1;
+	}
+
 	public boolean hasOutput() {
 		if (writeResult.size() == 0)
 			return false;
@@ -122,7 +142,24 @@ public class FunctionalUnit {
 		dest[i] = -1;
 		A[i] = 0;
 		unitCount--;
+		shift(i);
 	}
+	
+	public void shift(int p){
+		for(int i = p; i < unitCount; i++){
+			execTime[i] = execTime[i+1];
+			start[i] = start[i+1];
+			busy[i] = busy[i+1];
+			Op[i] = Op[i+1];
+			Vj[i] = Vj[i+1];
+			Vk[i] = Vk[i+1];
+			Qj[i] = Qj[i+1];
+			Qk[i] = Qk[i+1];
+			dest[i] = dest[i+1];
+			A[i] = A[i+1];
+		}
+	}
+	
 
 	public void execute(int clockCycle) {
 		if (isEmpty())

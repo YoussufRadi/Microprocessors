@@ -1,59 +1,97 @@
 package tomasulo;
 
+import memoryHierarchy.Word;
 import instructionSetArchitecture.Instruction;
+import instructionSetArchitecture.Register;
 
 public class ROB {
 	private ROBEntry[] entry;
+	private int[] oldValue;
 	private int head;
 	private int tail;
-	
+
 	public ROB(int size) {
 		entry = new ROBEntry[size];
+		oldValue = new int[size];
 		head = 0;
 		tail = 0;
 	}
-	
-	public boolean isFull(){
-		if(head == tail)
-			if(entry[tail] != null && !entry[tail].isReady())
+
+	public boolean isFull() {
+		if (head == tail)
+			if (entry[tail] != null && !entry[tail].isReady())
 				return true;
 		return false;
 	}
-	
-	public boolean isEmpty(){
-		if(head == tail)
-			if(entry[tail] == null || entry[tail].isReady())
-				return false;
-		return true;
+
+	public boolean isEmpty() {
+		if (head == tail)
+			if (entry[tail] == null || entry[tail].isReady())
+				return true;
+		return false;
 	}
-	
-	public int getInstructionToCommit(){
+
+	public int getInstructionToCommit() {
 		return head;
 	}
-	
-	public void flushAll(){
+
+	public void flushAll() {
+		while (!isEmpty()) {
+			Instruction ins = entry[head].getInstruction();
+			if (ins.getDestination() instanceof Register)
+				((Register) ins.getDestination()).setValue(oldValue[head]);
+			else if (ins.getType() == "SW")
+				if (oldValue[head] != -1)
+					Simulator.dataMemory.write(new Word(oldValue[head] + ""),
+							(int) ins.getDestination());
+				else
+					Simulator.dataMemory.write(new Word(),
+							(int) ins.getDestination());
+			// handling PC Left Still
+			entry[head].setReady(true);
+			head ++;
+			if (head == entry.length)
+				head = 0;
+		}
 		entry = new ROBEntry[entry.length];
 		head = 0;
 		tail = 0;
 	}
-	
-	public int issue(Instruction instruction){
+
+	public int issue(Instruction instruction) {
 		int entryNum = tail;
-		if(isFull())
+		if (isFull())
 			return -1;
 		entry[tail] = new ROBEntry(instruction);
+		if (instruction.getDestination() instanceof Register)
+			oldValue[tail] = ((Register) instruction.getDestination())
+					.getValue();
+		else {
+			if (instruction.getType() == "SW") {
+				Word x = Simulator.dataMemory.fetch((int) instruction
+						.getDestination());
+				if (x != null)
+					oldValue[tail] = Integer.parseInt(x.getData());
+				else
+					oldValue[tail] = -1;
+			} else
+				oldValue[tail] = (int) instruction.getDestination();
+			// handling PC Left Still
+
+		}
 		tail++;
-		if(tail == entry.length)
-			tail =0;
+		if (tail == entry.length)
+			tail = 0;
 		return entryNum;
 	}
-	
-	public boolean commit(){
-		if(isEmpty())
+
+	public boolean commit() {
+		if (isEmpty())
 			return false;
 		entry[head].setReady(true);
+		Simulator.RS.freeReservedUnit(head);
 		head++;
-		if(head == entry.length)
+		if (head == entry.length)
 			head = 0;
 		return true;
 	}

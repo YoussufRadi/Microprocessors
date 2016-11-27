@@ -3,7 +3,7 @@ package tomasulo;
 import instructionSetArchitecture.Instruction;
 
 public class ROBEntry {
-	private String type;
+	private Instruction instruction;
 	private Object dest;
 	private int value;
 	private boolean ready;
@@ -16,8 +16,8 @@ public class ROBEntry {
 		this.ready = ready;
 	}
 
-	public String getType() {
-		return type;
+	public Instruction getInstruction() {
+		return instruction;
 	}
 
 	public Object getDest() {
@@ -29,7 +29,7 @@ public class ROBEntry {
 	}
 
 	public ROBEntry(Instruction instruction) {
-		this.type = instruction.getType();
+		this.instruction = instruction;
 		this.dest = instruction.getDestination();
 		value = 0;
 		ready = false;

@@ -27,7 +27,8 @@ public class ReservationStation {
 			int nandNum, int nandTime, int mulNum, int mulTime) {
 		allStations = new FunctionalUnit[11];
 		allStations[0] = load = new FunctionalUnit("LOAD", loadNum, loadTime);
-		allStations[1] = store = new FunctionalUnit("STORE", storeNum, storeTime);
+		allStations[1] = store = new FunctionalUnit("STORE", storeNum,
+				storeTime);
 		allStations[2] = jmp = new FunctionalUnit("JMP", jmpNum, jmpTime);
 		allStations[3] = beq = new FunctionalUnit("BEQ", beqNum, beqTime);
 		allStations[4] = jalr = new FunctionalUnit("JALR", jalrNum, jalrTime);
@@ -98,6 +99,16 @@ public class ReservationStation {
 
 	public int extractDataToCommit() {
 		return dataToCommit.remove(0);
+	}
+
+	public void freeReservedUnit(int ROBentry) {
+		for (int i = 0; i < allStations.length; i++)
+			for (int j = 0; j < allStations[i].getNumberOfInstances(); j++) {
+				if (allStations[i].getQj(j) == ROBentry)
+					allStations[i].clearQj(j);
+				if (allStations[i].getQk(j) == ROBentry)
+					allStations[i].clearQk(j);
+			}
 	}
 
 }

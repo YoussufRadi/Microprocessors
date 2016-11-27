@@ -18,10 +18,19 @@ public class Tomasulo {
 		this.instructionBuffer = new LinkedList<Instruction>();
 		this.sizeBuffer = sizeBuffer;
 		commitData = new ArrayList<Integer>();
+		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
+		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
+		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
+		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
+		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
 	}
 
 	public boolean isFull() {
 		return instructionBuffer.size() == sizeBuffer;
+	}
+	
+	public boolean isEmpty() {
+		return instructionBuffer.size() == 0;
 	}
 
 	public void fetch() {
@@ -38,14 +47,16 @@ public class Tomasulo {
 			instructionBuffer.add(instruction);
 		}
 	}
+	
+	int ROBentry;
 
 	public void issue(int clockCycle) {
-		if (instructionBuffer.isEmpty())
-		//	fetch(); just to test with one instruction
-			instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
-		int ROBentry;
+
+
 		boolean doneFlag = false;
 		for (int i = 0; i < numberOfWays; i++) {
+			if(isEmpty())
+				return;				
 			ROBentry = Simulator.ROB.issue(instructionBuffer.peek());
 			if (ROBentry != -1)
 				doneFlag = Simulator.RS.issue(instructionBuffer.peek(),
