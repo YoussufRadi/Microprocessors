@@ -59,7 +59,7 @@ public class Tomasulo {
 			if (ROBentry == -1)
 				ROBentry = Simulator.ROB.issue(instructionBuffer.peek());
 			if (ROBentry != -1)
-				doneFlag = Simulator.RS.issue(instructionBuffer.peek(),
+				doneFlag = Simulator.RS.issue(clockCycle, instructionBuffer.peek(),
 						ROBentry);
 			if (doneFlag) {
 				instructionBuffer.poll();

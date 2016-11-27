@@ -41,49 +41,50 @@ public class ReservationStation {
 		dataToCommit = new ArrayList<Integer>();
 	}
 
-	public boolean issue(Instruction instruction, int ROBEntryNumber) {
+	public boolean issue(int clockCycle, Instruction instruction, int ROBEntryNumber) {
 		boolean done = false;
 		switch (instruction.getType()) {
 		case "LW":
-			done = load.issue(instruction, ROBEntryNumber);
+			done = load.issue(clockCycle, instruction, ROBEntryNumber);
 			break;
 		case "SW":
-			done = store.issue(instruction, ROBEntryNumber);
+			done = store.issue(clockCycle, instruction, ROBEntryNumber);
 			break;
 		case "JMP":
-			done = jmp.issue(instruction, ROBEntryNumber);
+			done = jmp.issue(clockCycle, instruction, ROBEntryNumber);
 			break;
 		case "BEQ":
-			done = beq.issue(instruction, ROBEntryNumber);
+			done = beq.issue(clockCycle, instruction, ROBEntryNumber);
 			break;
 		case "JALR":
-			done = jalr.issue(instruction, ROBEntryNumber);
+			done = jalr.issue(clockCycle, instruction, ROBEntryNumber);
 			break;
 		case "RET":
-			done = ret.issue(instruction, ROBEntryNumber);
+			done = ret.issue(clockCycle, instruction, ROBEntryNumber);
 			break;
 		case "ADD":
-			done = add.issue(instruction, ROBEntryNumber);
+			done = add.issue(clockCycle, instruction, ROBEntryNumber);
 			break;
 		case "SUB":
-			done = sub.issue(instruction, ROBEntryNumber);
+			done = sub.issue(clockCycle, instruction, ROBEntryNumber);
 			break;
 		case "ADDI":
-			done = addI.issue(instruction, ROBEntryNumber);
+			done = addI.issue(clockCycle, instruction, ROBEntryNumber);
 			break;
 		case "NAND":
-			done = nand.issue(instruction, ROBEntryNumber);
+			done = nand.issue(clockCycle, instruction, ROBEntryNumber);
 			break;
 		case "MUL":
-			done = mul.issue(instruction, ROBEntryNumber);
+			done = mul.issue(clockCycle, instruction, ROBEntryNumber);
 			break;
 		}
 		return done;
 	}
 
 	public void execute(int clockCycle) {
+		boolean writeOnce = false;
 		for (int i = 0; i < allStations.length; i++)
-			allStations[i].execute(clockCycle);
+			writeOnce = allStations[i].execute(clockCycle,writeOnce);
 	}
 
 	public void getRsultsFromWrite() {

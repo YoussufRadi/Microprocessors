@@ -12,6 +12,7 @@ public class FunctionalUnit {
 	private int[] execTime;
 	private int unitCount;
 	private int[] start;
+	private int[] issueTime;
 	private boolean[] busy;
 	private Instruction[] Op;
 	private Register[] Vj;
@@ -29,6 +30,7 @@ public class FunctionalUnit {
 		this.execTime = new int[numberOfInstances];
 		this.unitCount = 0;
 		this.start = new int[numberOfInstances];
+		this.issueTime = new int[numberOfInstances];
 		this.busy = new boolean[numberOfInstances];
 		this.Op = new Instruction[numberOfInstances];
 		this.Vj = new Register[numberOfInstances];
@@ -42,6 +44,7 @@ public class FunctionalUnit {
 		for (int i = 0; i < numberOfInstances; i++) {
 			this.execTime[i] = execTime;
 			start[i] = -1;
+			issueTime[i] = -1;
 			Qj[i] = -1;
 			Qk[i] = -1;
 			dest[i] = -1;
@@ -98,10 +101,11 @@ public class FunctionalUnit {
 		return false;
 	}
 
-	public boolean issue(Instruction instruction, int ROBEntryNumber) {
+	public boolean issue(int clockCycle, Instruction instruction, int ROBEntryNumber) {
 		if (isFull())
 			return false;
 		busy[unitCount] = true;
+		issueTime[unitCount] = clockCycle;
 		Op[unitCount] = instruction;
 		Qj[unitCount] = Op[unitCount].getVj().getROBEnteryUsing();
 		if (Op[unitCount].getVk() != null)
@@ -133,6 +137,7 @@ public class FunctionalUnit {
 	public void write(int i) {
 		writeResult.add(dest[i]);
 		start[i] = -1;
+		issueTime[i] = -1;
 		busy[i] = false;
 		if (Op[i].getDestination() instanceof Register)
 			((Register) Op[i].getDestination()).setROBEnteryUsing(-1);
@@ -149,6 +154,7 @@ public class FunctionalUnit {
 		for(int i = p; i < unitCount; i++){
 			execTime[i] = execTime[i+1];
 			start[i] = start[i+1];
+			issueTime[i] = start[i+1];
 			busy[i] = busy[i+1];
 			Op[i] = Op[i+1];
 			Vj[i] = Vj[i+1];
@@ -159,6 +165,7 @@ public class FunctionalUnit {
 			A[i] = A[i+1];
 		}
 		start[unitCount] = -1;
+		issueTime[unitCount] = -1;
 		busy[unitCount] = false;
 		Op[unitCount] = null;
 		Vj[unitCount] = null;
@@ -170,16 +177,20 @@ public class FunctionalUnit {
 	}
 	
 
-	public void execute(int clockCycle) {
+	public boolean execute(int clockCycle, boolean writeOnce) {
 		if (isEmpty())
-			return;
+			return false;
+		boolean ret = writeOnce;
 		for (int i = 0; i < unitCount; i++) {
 			int cyclesLeft = start[i] + execTime[i] - clockCycle;
-			if (start[i] == -1)
+			if (start[i] == -1 && issueTime[i] != clockCycle)
 				executeNewInstruction(clockCycle, i);
-			else if (cyclesLeft <= 0)
+			else if (cyclesLeft <= 0 && !ret){
 				write(i);
+				ret = true;
+			}
 		}
+		return ret;
 	}
 
 }
