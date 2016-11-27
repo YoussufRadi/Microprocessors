@@ -19,7 +19,7 @@ public class ReservationStation {
 	private FunctionalUnit mul;
 	private FunctionalUnit[] allStations = { load, store, jmp, beq, jalr, ret,
 			add, sub, addI, nand, mul };
-	private ArrayList<Instruction> dataToCommit;
+	private ArrayList<Integer> dataToCommit;
 
 	public ReservationStation(int loadNum, int loadTime, int storeNum,
 			int storeTime, int jmpNum, int jmpTime, int beqNum, int beqTime,
@@ -37,43 +37,44 @@ public class ReservationStation {
 		addI = new FunctionalUnit("ADDI", addINum, addITime);
 		nand = new FunctionalUnit("NAND", nandNum, nandTime);
 		mul = new FunctionalUnit("MUL", mulNum, mulTime);
+		dataToCommit = new ArrayList<Integer>();
 	}
 
-	public boolean issue(Instruction instruction) {
+	public boolean issue(Instruction instruction, int ROBEntryNumber) {
 		boolean done = false;
 		switch (instruction.getType()) {
 		case "LW":
-			done = load.issue(instruction);
+			done = load.issue(instruction, ROBEntryNumber);
 			break;
 		case "SW":
-			done = store.issue(instruction);
+			done = store.issue(instruction, ROBEntryNumber);
 			break;
 		case "JMP":
-			done = jmp.issue(instruction);
+			done = jmp.issue(instruction, ROBEntryNumber);
 			break;
 		case "BEQ":
-			done = beq.issue(instruction);
+			done = beq.issue(instruction, ROBEntryNumber);
 			break;
 		case "JALR":
-			done = jalr.issue(instruction);
+			done = jalr.issue(instruction, ROBEntryNumber);
 			break;
 		case "RET":
-			done = ret.issue(instruction);
+			done = ret.issue(instruction, ROBEntryNumber);
 			break;
 		case "ADD":
-			done = add.issue(instruction);
+			done = add.issue(instruction, ROBEntryNumber);
 			break;
 		case "SUB":
-			done = sub.issue(instruction);
+			done = sub.issue(instruction, ROBEntryNumber);
 			break;
 		case "ADDI":
-			done = addI.issue(instruction);
+			done = addI.issue(instruction, ROBEntryNumber);
 			break;
 		case "NAND":
-			done = nand.issue(instruction);
+			done = nand.issue(instruction, ROBEntryNumber);
 			break;
 		case "MUL":
-			done = mul.issue(instruction);
+			done = mul.issue(instruction, ROBEntryNumber);
 			break;
 		}
 		return done;
@@ -88,6 +89,6 @@ public class ReservationStation {
 		for (int i = 0; i < allStations.length; i++)
 			if (allStations[i].hasOutput())
 				for (int j = 0; j < allStations[i].resultSize(); j++)
-					dataToCommit.add(allStations[i].extractWriteResult(j) );
+					dataToCommit.add(allStations[i].extractWriteResult(j));
 	}
 }

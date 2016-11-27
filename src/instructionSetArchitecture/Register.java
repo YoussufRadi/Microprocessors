@@ -1,14 +1,13 @@
 package instructionSetArchitecture;
 
-import tomasulo.FunctionalUnit;
-
 public class Register {
 
 	private int value;
-	private FunctionalUnit unitUsing;
+	private int ROBEnteryUsing;
 	
 	public Register() {
 		this.value = 0;
+		ROBEnteryUsing = -1;
 	}
 
 	public Register(int value) {
@@ -23,12 +22,12 @@ public class Register {
 		this.value = value;
 	}
 
-	public FunctionalUnit getUnitUsing() {
-		return unitUsing;
+	public int getROBEnteryUsing() {
+		return ROBEnteryUsing;
 	}
 
-	public void setUnitUsing(FunctionalUnit unitUsing) {
-		this.unitUsing = unitUsing;
+	public void setROBEnteryUsing(int ROBEnteryUsing) {
+		this.ROBEnteryUsing = ROBEnteryUsing;
 	}
 
 }
