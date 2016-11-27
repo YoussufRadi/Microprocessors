@@ -16,6 +16,8 @@ public class TomasuloSimulator extends JFrame {
 	private int multiplyFUs;
 	private int addFUs;
 	private int ROBSize;
+	private int iCacheLevels;
+	private int dCacheLevels;
 	
 	// panelOne components 
 	private JPanel panelOne;
@@ -37,6 +39,12 @@ public class TomasuloSimulator extends JFrame {
 	
 	private JLabel ROBSizeLabel;
 	private JTextField ROBSizeText;
+	
+	private JLabel iCacheNumberLabel;
+	private JTextField iCacheNumberText;
+	private JLabel dCacheNumberLabel;
+	private JTextField dCacheNumberText;
+	
 	private JLabel error;
 	
 	private JButton proceed;
@@ -49,7 +57,7 @@ public class TomasuloSimulator extends JFrame {
 		this.setTitle("Tomasulo Simulator");
 		this.setResizable(false);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		launchPanelOne();
+		launchPanelTwo();
 		
 	}
 	
@@ -104,6 +112,18 @@ public class TomasuloSimulator extends JFrame {
 		ROBSizeText=new JTextField("n");
 		ROBSizeText.setBounds(20, 265, 40, 35);
 		
+		iCacheNumberLabel = new JLabel("Number of i-cache levels");
+		iCacheNumberLabel.setBounds(20, 310, 300, 35);
+		iCacheNumberLabel.setForeground(Color.white);
+		iCacheNumberText = new JTextField(iCacheLevels);
+		iCacheNumberText.setBounds(20, 340, 40, 35);
+		
+		dCacheNumberLabel = new JLabel("Number of d-cache levels");
+		dCacheNumberLabel.setBounds(20, 390, 300, 35);
+		dCacheNumberLabel.setForeground(Color.white);
+		dCacheNumberText = new JTextField(dCacheLevels);
+		dCacheNumberText.setBounds(20, 420, 40, 35);
+		
 		error = new JLabel("An error occured, please make sure you entered the settings correctly");
 		error.setForeground(Color.red);
 		error.setBounds(20, 530, 500, 35);
@@ -123,6 +143,16 @@ public class TomasuloSimulator extends JFrame {
 					multiplyFUs = Integer.parseInt(multiplyFUsField.getText());
 					addFUs = Integer.parseInt(addFUsField.getText());
 					ROBSize = Integer.parseInt(ROBSizeText.getText());
+					try {
+						iCacheLevels = Integer.parseInt(iCacheNumberText.getText());
+					} catch (Exception e2) {
+						iCacheLevels = 1;
+					}
+					try {
+						dCacheLevels = Integer.parseInt(dCacheNumberText.getText());
+					} catch (Exception e2) {
+						dCacheLevels = 1;
+					}
 					launchPanelTwo();
 				}
 				catch(Exception ex){
@@ -142,6 +172,10 @@ public class TomasuloSimulator extends JFrame {
 		panelOne.add(loadFUsField);
 		panelOne.add(ROBSizeLabel);
 		panelOne.add(ROBSizeText);
+		panelOne.add(iCacheNumberLabel);
+		panelOne.add(iCacheNumberText);
+		panelOne.add(dCacheNumberLabel);
+		panelOne.add(dCacheNumberText);
 		panelOne.add(proceed);
 		panelOne.add(error);
 		
@@ -151,9 +185,42 @@ public class TomasuloSimulator extends JFrame {
 	}
 	
 	public void launchPanelTwo(){
-		this.remove(panelOne);
+		//this.remove(panelOne);
+		
+		panelTwo=new JPanel();
+		panelTwo.setBackground(Color.black);
+		panelTwo.setLayout(null);
+		panelTwo.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,3));
+		panelTwo.setBounds(0, 0, 800, 578);
+		
+		JLabel iCacheLabel = new JLabel("I-Cache geometry");
+		iCacheLabel.setForeground(Color.white);
+		iCacheLabel.setBounds(20, 10, 150, 35);
+		
+		JLabel iLineSizeLabel = new JLabel("Line Size");
+		iLineSizeLabel.setForeground(Color.white);
+		iLineSizeLabel.setBounds(170, 10, 100, 35);
+		
+		JTextField iLineSizeText = new JTextField();
+		iLineSizeText.setBounds(260, 10, 100, 35);
+		
+		JLabel si = new JLabel("S");
+		si.setForeground(Color.white);
+		si.setBounds(30, 50, 35, 35);
+		
+		int [] iS = new int[iCacheLevels];
+		
+		
+		panelTwo.add(iCacheLabel);
+		panelTwo.add(iLineSizeLabel);
+		panelTwo.add(iLineSizeText);
+		panelTwo.add(si);
+		
+		this.add(panelTwo);
+		
 		this.revalidate();
 		this.repaint();
+
 	}
 	
 	
