@@ -40,10 +40,11 @@ public class Tomasulo {
 
 	public void issue(int clockCycle) {
 		if (instructionBuffer.isEmpty())
-			fetch();
+		//	fetch(); just to test with one instruction
+			instructionBuffer.add(new Instruction("ADD R0, R1, R2"));
 		int ROBentry;
 		boolean doneFlag = false;
-		for (int i = 0; i < sizeBuffer; i++) {
+		for (int i = 0; i < numberOfWays; i++) {
 			ROBentry = Simulator.ROB.issue(instructionBuffer.peek());
 			if (ROBentry != -1)
 				doneFlag = Simulator.RS.issue(instructionBuffer.peek(),
