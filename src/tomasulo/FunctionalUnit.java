@@ -119,6 +119,7 @@ public class FunctionalUnit {
 		if (Qj[unit] != -1 || Qk[unit] != -1)
 			return;
 		Op[unit].execute();
+		System.out.println("write in " + ((Register) Op[unit].getDestination()).getName() + " value : " + ((Register) Op[unit].getDestination()).getValue());
 		if (name.equals("LOAD") || name.equals("STORE"))
 			execTime[unit] = Op[unit].getAccessTime();
 		start[unit] = clockCycle;
@@ -133,7 +134,6 @@ public class FunctionalUnit {
 		writeResult.add(dest[i]);
 		start[i] = -1;
 		busy[i] = false;
-		System.out.println("write in " + ((Register) Op[i].getDestination()).getName() + " value : " + ((Register) Op[i].getDestination()).getValue());
 		if (Op[i].getDestination() instanceof Register)
 			((Register) Op[i].getDestination()).setROBEnteryUsing(-1);
 		Op[i] = null;
@@ -158,6 +158,15 @@ public class FunctionalUnit {
 			dest[i] = dest[i+1];
 			A[i] = A[i+1];
 		}
+		start[unitCount] = -1;
+		busy[unitCount] = false;
+		Op[unitCount] = null;
+		Vj[unitCount] = null;
+		Vk[unitCount] = null;
+		Qj[unitCount] = -1;
+		Qk[unitCount] = -1;
+		dest[unitCount] = -1;
+		A[unitCount] = 0;
 	}
 	
 
@@ -168,7 +177,7 @@ public class FunctionalUnit {
 			int cyclesLeft = start[i] + execTime[i] - clockCycle;
 			if (start[i] == -1)
 				executeNewInstruction(clockCycle, i);
-			else if (cyclesLeft == 0)
+			else if (cyclesLeft <= 0)
 				write(i);
 		}
 	}

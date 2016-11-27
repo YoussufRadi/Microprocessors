@@ -28,7 +28,7 @@ public class Tomasulo {
 	public boolean isFull() {
 		return instructionBuffer.size() == sizeBuffer;
 	}
-	
+
 	public boolean isEmpty() {
 		return instructionBuffer.size() == 0;
 	}
@@ -47,22 +47,24 @@ public class Tomasulo {
 			instructionBuffer.add(instruction);
 		}
 	}
-	
-	int ROBentry;
+
+	int ROBentry = -1;
 
 	public void issue(int clockCycle) {
 
-
 		boolean doneFlag = false;
 		for (int i = 0; i < numberOfWays; i++) {
-			if(isEmpty())
-				return;				
-			ROBentry = Simulator.ROB.issue(instructionBuffer.peek());
+			if (isEmpty())
+				return;
+			if (ROBentry == -1)
+				ROBentry = Simulator.ROB.issue(instructionBuffer.peek());
 			if (ROBentry != -1)
 				doneFlag = Simulator.RS.issue(instructionBuffer.peek(),
 						ROBentry);
-			if (doneFlag)
+			if (doneFlag) {
 				instructionBuffer.poll();
+				ROBentry = -1;
+			}
 		}
 	}
 
