@@ -185,7 +185,10 @@ public class TomasuloSimulator extends JFrame {
 	}
 	
 	public void launchPanelTwo(){
-		//this.remove(panelOne);
+//		this.remove(panelOne);
+		
+		iCacheLevels = 2;
+		dCacheLevels = 2;
 		
 		panelTwo=new JPanel();
 		panelTwo.setBackground(Color.black);
@@ -197,24 +200,128 @@ public class TomasuloSimulator extends JFrame {
 		iCacheLabel.setForeground(Color.white);
 		iCacheLabel.setBounds(20, 10, 150, 35);
 		
-		JLabel iLineSizeLabel = new JLabel("Line Size");
+		JLabel iLineSizeLabel = new JLabel("Line Size in words");
 		iLineSizeLabel.setForeground(Color.white);
-		iLineSizeLabel.setBounds(170, 10, 100, 35);
+		iLineSizeLabel.setBounds(170, 10, 120, 35);
 		
 		JTextField iLineSizeText = new JTextField();
-		iLineSizeText.setBounds(260, 10, 100, 35);
+		iLineSizeText.setBounds(300, 10, 60, 35);
 		
-		JLabel si = new JLabel("S");
-		si.setForeground(Color.white);
-		si.setBounds(30, 50, 35, 35);
+		JLabel siLabel = new JLabel("Size in Bytes");
+		siLabel.setForeground(Color.white);
+		siLabel.setBounds(80, 50, 100, 35);
 		
-		int [] iS = new int[iCacheLevels];
+		JLabel miLabel = new JLabel("Associativity");
+		miLabel.setForeground(Color.white);
+		miLabel.setBounds(200, 50, 100, 35);
 		
+		JTextField [] si = new JTextField[iCacheLevels];
+		JTextField [] mi = new JTextField[iCacheLevels];
+		
+		for (int i = 0; i < iCacheLevels; i++){
+			JLabel li = new JLabel("L"+(i+1));
+			li.setBounds(20, 80+(i*30), 35, 35);
+			li.setForeground(Color.white);
+			panelTwo.add(li);
+			si[i] = new JTextField();
+			si[i].setBounds(80, 80+(i*30), 35, 35);
+			panelTwo.add(si[i]);
+			mi[i] = new JTextField();
+			mi[i].setBounds(200, 80+(i*30), 35, 35);
+			panelTwo.add(mi[i]);
+		}
+		
+		JLabel dCacheLabel = new JLabel("D-Cache geometry");
+		dCacheLabel.setForeground(Color.white);
+		dCacheLabel.setBounds(20, 260, 150, 35);
+		
+		JLabel dLineSizeLabel = new JLabel("Line Size in words");
+		dLineSizeLabel.setForeground(Color.white);
+		dLineSizeLabel.setBounds(170, 260, 120, 35);
+		
+		JTextField dLineSizeText = new JTextField();
+		dLineSizeText.setBounds(300, 260, 60, 35);
+		
+		JLabel sdLabel = new JLabel("Size in Bytes");
+		sdLabel.setForeground(Color.white);
+		sdLabel.setBounds(80, 300, 100, 35);
+		
+		JLabel mdLabel = new JLabel("Associativity");
+		mdLabel.setForeground(Color.white);
+		mdLabel.setBounds(200, 300, 100, 35);
+		
+		JTextField [] sd = new JTextField[dCacheLevels];
+		JTextField [] md = new JTextField[dCacheLevels];
+		
+		for (int i = 0; i < dCacheLevels; i++){
+			JLabel ld = new JLabel("L"+(i+1));
+			ld.setBounds(20, 330+(i*30), 35, 35);
+			ld.setForeground(Color.white);
+			panelTwo.add(ld);
+			sd[i] = new JTextField();
+			sd[i].setBounds(80, 330+(i*30), 35, 35);
+			panelTwo.add(sd[i]);
+			md[i] = new JTextField();
+			md[i].setBounds(200, 330+(i*30), 35, 35);
+			panelTwo.add(md[i]);
+		}
+		
+		JButton start = new JButton("Start");
+		start.setBounds(350, 500, 100, 35);
+		start.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int [] siValues = new int[iCacheLevels];
+				int [] miValues = new int[iCacheLevels];
+				int [] mdValues = new int[dCacheLevels];
+				int [] sdValues = new int[dCacheLevels];
+				
+				try{
+					int iLineSize = Integer.parseInt(iLineSizeText.getText());
+					int dLineSize = Integer.parseInt(dLineSizeText.getText());
+					for(int i = 0; i < iCacheLevels; i++){
+						siValues[i] = Integer.parseInt(si[i].getText());
+						miValues[i] = Integer.parseInt(mi[i].getText());
+					}
+					for(int i = 0; i < dCacheLevels; i++){
+						sdValues[i] = Integer.parseInt(sd[i].getText());
+						mdValues[i] = Integer.parseInt(md[i].getText());
+					}
+					System.out.println("Line Size for I = "+iLineSize);
+					System.out.println("Line Size for D = "+dLineSize);
+					System.out.println("");
+					for(int i = 0; i < iCacheLevels; i++)
+						System.out.println(siValues[i]);
+					for(int i = 0; i < iCacheLevels; i++)
+						System.out.println(miValues[i]);
+					for(int i = 0; i < dCacheLevels; i++)
+						System.out.println(sdValues[i]);
+					for(int i = 0; i < dCacheLevels; i++)
+						System.out.println(mdValues[i]);
+				}
+				catch(Exception e1){
+					error.setVisible(true);
+				}
+			}
+		});
+		
+		error = new JLabel("An error occured, please make sure you entered the settings correctly");
+		error.setForeground(Color.red);
+		error.setBounds(20, 530, 500, 35);
+		error.setVisible(false);
 		
 		panelTwo.add(iCacheLabel);
 		panelTwo.add(iLineSizeLabel);
 		panelTwo.add(iLineSizeText);
-		panelTwo.add(si);
+		panelTwo.add(siLabel);
+		panelTwo.add(miLabel);
+		
+		panelTwo.add(dCacheLabel);
+		panelTwo.add(dLineSizeLabel);
+		panelTwo.add(dLineSizeText);
+		panelTwo.add(sdLabel);
+		panelTwo.add(mdLabel);
+		panelTwo.add(start);
+		panelTwo.add(error);
 		
 		this.add(panelTwo);
 		
@@ -222,8 +329,6 @@ public class TomasuloSimulator extends JFrame {
 		this.repaint();
 
 	}
-	
-	
 	
 	public static void main(String[] args) {
 		TomasuloSimulator window = new TomasuloSimulator();
