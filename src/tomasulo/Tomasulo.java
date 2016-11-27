@@ -6,18 +6,32 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import memoryHierarchy.Word;
+
 public class Tomasulo {
 
+	private ArrayList<InstExtend> waitBuffer;
 	private Queue<Instruction> instructionBuffer;
 	private int numberOfWays;
 	private int sizeBuffer;
 	private ArrayList<Integer> commitData;
 
 	public Tomasulo(int numberOfWays, int sizeBuffer) {
+
 		this.numberOfWays = numberOfWays;
+		this.waitBuffer = new ArrayList<InstExtend>();
 		this.instructionBuffer = new LinkedList<Instruction>();
 		this.sizeBuffer = sizeBuffer;
 		commitData = new ArrayList<Integer>();
+
+		Simulator.instructionMemory.write(new Word("ADD r0 r1 r2"), 3);
+		Simulator.instructionMemory.write(new Word("ADD r3 r1 r2"), 4);
+		Simulator.instructionMemory.write(new Word("SUB r4 r1 r2"), 5);
+		Simulator.instructionMemory.write(new Word("ADD r5 r1 r2"), 6);
+		Simulator.instructionMemory.write(new Word("ADD r6 r1 r2"), 7);
+		Simulator.instructionMemory.write(new Word("SUB r7 r1 r2"), 8);
+
+
 	}
 
 	public boolean isFull() {
@@ -25,24 +39,53 @@ public class Tomasulo {
 	}
 
 	public void fetch() {
-		int pc = Simulator.ISA_regs.getPC();
+
+		int currentCycle = Simulator.clockCycle;
+		int largestAccessTime = 0;
 		for (int i = 0; i < numberOfWays; i++) {
+			int pc = Simulator.ISA_regs.getPC();
+			// System.out.println(pc);
 			if (this.isFull())
 				return;
-			String word = Simulator.instructionMemory.fetch(pc++).getData(); // note:
-																				// branch
-																				// target
-																				// address
-																				// handling
+
+			if (Simulator.instructionMemory.fetch(pc) == null)
+				continue;
+			String word = Simulator.instructionMemory.fetch(pc).getData();
 			Instruction instruction = new Instruction(word);
-			instructionBuffer.add(instruction);
+
+			if (Simulator.instructionMemory.getLatestAccessTime() > largestAccessTime)
+				largestAccessTime = Simulator.instructionMemory
+						.getLatestAccessTime();
+			// System.out.println(instruction.getType());
+			waitBuffer.add(new InstExtend(instruction));
+			instruction.updatePC();
+		}
+
+		int index = waitBuffer.size() - 1;
+
+		for (int i = 0; i < numberOfWays; i++) {
+			if (index == -1)
+				break;
+			waitBuffer.get(index).setExpectedCycle(
+					currentCycle + largestAccessTime);
+			index--;
+		}
+
+		for (int i = 0; i < waitBuffer.size(); i++) {
+
+			if (waitBuffer.get(i).getExpectedCycle() == currentCycle) {
+				instructionBuffer.add(waitBuffer.remove(i).getInstruction());
+			}
 		}
 	}
 
 	public void issue(int clockCycle) {
-		if (instructionBuffer.isEmpty())
-		//	fetch(); just to test with one instruction
-			instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
+		System.out.println("----------------------------------");
+		System.out.println("Clock -->"+ Simulator.clockCycle);
+		for(Instruction s : instructionBuffer){
+			System.out.println(s.getType()+" "+s.getDestination());
+		}
+		System.out.println("----------------------------------");
 		int ROBentry;
 		boolean doneFlag = false;
 		for (int i = 0; i < numberOfWays; i++) {

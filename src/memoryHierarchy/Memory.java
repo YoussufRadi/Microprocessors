@@ -32,9 +32,9 @@ public class Memory {
 		return x;
 	}
 
-	public void write(Word[] data, int address) {
+	public void write(Word[] data, int address, int offset) {
 		for (int i = 0; i < data.length; i++)
-			this.data[address+i] = data[i];
+			this.data[address+i-offset] = data[i];
 	}
 	
 	public Word[] writeByte(Word data, int address, int offset , int lineSize) {

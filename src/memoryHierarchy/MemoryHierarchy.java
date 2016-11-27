@@ -47,14 +47,13 @@ public class MemoryHierarchy {
 	}
 
 	public Word fetch(int address) throws RuntimeException {
-		int offsetBits = (int) (Math.log(caches[0].getLineSize()) / Math
-				.log(2));
+		int offsetBits = (int) (Math.log(caches[0].getLineSize()) / Math.log(2));
 		int offset = (int) (address % Math.pow(2, offsetBits));
 		int instructionAccessTime = 0;
 		Word[] x = null;
 		for (int i = 0; i < caches.length; i++) {
 			instructionAccessTime += caches[i].getAccessTime();
-			
+
 			int index = (int) (address / Math.pow(2, offsetBits))
 					% caches[i].getSets().length;
 			int indexBits = (int) (Math.log(caches[i].getNumberOfLines()
@@ -73,7 +72,7 @@ public class MemoryHierarchy {
 			}
 
 		}
-		x = mainMemory.fetch(address,offset,caches[0].getLineSize());
+		x = mainMemory.fetch(address, offset, caches[0].getLineSize());
 		writeInUpperLevel(x, caches.length - 1, address);
 		return x[offset];
 	}
@@ -119,7 +118,8 @@ public class MemoryHierarchy {
 
 			if (x != null) {
 				int c = i;
-				writeInLowerLevel(x, ++c, address);
+				if (caches[i].getPolicy() != WritingPolicy.WRITE_BACK)
+					writeInLowerLevel(x, ++c, address);
 
 				Word[] y = new Word[x.getData().length];
 				for (int z = 0; z < y.length; z++)
@@ -140,16 +140,17 @@ public class MemoryHierarchy {
 	private void writeInLowerLevel(CacheBlock x, int i, int address) {
 		CacheBlock x1 = null;
 		Word[] y = new Word[x.getData().length];
+		int offsetBits = (int) (Math.log(caches[0].getLineSize()) / Math.log(2));
+		int offset = (int) (address % Math.pow(2, offsetBits));
 		for (int z = 0; z < y.length; z++)
 			if (x.getData()[z] != null)
 				y[z] = (Word) x.getData()[z].clone();
 		if (i >= caches.length - 1) {
-			mainMemory.write(y, address);
+			mainMemory.write(y, address, offset);
 			return;
 		} else if (caches[i - 1].getPolicy()
 				.equals(WritingPolicy.WRITE_THROUGH)) {
-			int offsetBits = (int) (Math.log(caches[0].getLineSize()) / Math
-					.log(2));
+
 			int newIndex = (int) (address / Math.pow(2, offsetBits))
 					% caches[i].getSets().length;
 			int indexBits = (int) (Math.log(caches[i].getNumberOfLines()
