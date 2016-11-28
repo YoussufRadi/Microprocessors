@@ -47,9 +47,12 @@ public class ROB {
 				else
 					Simulator.dataMemory.write(new Word(),
 							(int) ins.getDestination());
-			// handling PC Left Still
+			else if (ins.getType().equals("BEQ"))
+				Simulator.ISA_regs.setPC(oldValue[head]);
+			else
+				Simulator.ISA_regs.setPC(entry[head].getInstruction().fetchPC);
 			entry[head].setReady(true);
-			head ++;
+			head++;
 			if (head == entry.length)
 				head = 0;
 		}
@@ -67,7 +70,7 @@ public class ROB {
 			oldValue[tail] = ((Register) instruction.getDestination())
 					.getValue();
 		else {
-			if (instruction.getType() == "SW") {
+			if (instruction.getType().equals("SW")) {
 				Word x = Simulator.dataMemory.fetch((int) instruction
 						.getDestination());
 				if (x != null)
@@ -88,6 +91,10 @@ public class ROB {
 	public boolean commit() {
 		if (isEmpty())
 			return false;
+		if(entry[head].getInstruction().getType().equals("BEQ") && entry[head].getInstruction().isMissPridiction()){
+			flushAll();
+			return true;
+		}
 		entry[head].setReady(true);
 		Simulator.RS.freeReservedUnit(head);
 		head++;

@@ -101,7 +101,8 @@ public class FunctionalUnit {
 		return false;
 	}
 
-	public boolean issue(int clockCycle, Instruction instruction, int ROBEntryNumber) {
+	public boolean issue(int clockCycle, Instruction instruction,
+			int ROBEntryNumber) {
 		if (isFull())
 			return false;
 		busy[unitCount] = true;
@@ -123,7 +124,11 @@ public class FunctionalUnit {
 		if (Qj[unit] != -1 || Qk[unit] != -1)
 			return;
 		Op[unit].execute();
-		System.out.println("write in " + ((Register) Op[unit].getDestination()).getName() + " value : " + ((Register) Op[unit].getDestination()).getValue());
+		if (Op[unit].getDestination() instanceof Register)
+			System.out.println("write in "
+					+ ((Register) Op[unit].getDestination()).getName()
+					+ " value : "
+					+ ((Register) Op[unit].getDestination()).getValue());
 		if (name.equals("LOAD") || name.equals("STORE"))
 			execTime[unit] = Op[unit].getAccessTime();
 		start[unit] = clockCycle;
@@ -149,20 +154,20 @@ public class FunctionalUnit {
 		unitCount--;
 		shift(i);
 	}
-	
-	public void shift(int p){
-		for(int i = p; i < unitCount; i++){
-			execTime[i] = execTime[i+1];
-			start[i] = start[i+1];
-			issueTime[i] = start[i+1];
-			busy[i] = busy[i+1];
-			Op[i] = Op[i+1];
-			Vj[i] = Vj[i+1];
-			Vk[i] = Vk[i+1];
-			Qj[i] = Qj[i+1];
-			Qk[i] = Qk[i+1];
-			dest[i] = dest[i+1];
-			A[i] = A[i+1];
+
+	public void shift(int p) {
+		for (int i = p; i < unitCount; i++) {
+			execTime[i] = execTime[i + 1];
+			start[i] = start[i + 1];
+			issueTime[i] = start[i + 1];
+			busy[i] = busy[i + 1];
+			Op[i] = Op[i + 1];
+			Vj[i] = Vj[i + 1];
+			Vk[i] = Vk[i + 1];
+			Qj[i] = Qj[i + 1];
+			Qk[i] = Qk[i + 1];
+			dest[i] = dest[i + 1];
+			A[i] = A[i + 1];
 		}
 		start[unitCount] = -1;
 		issueTime[unitCount] = -1;
@@ -175,7 +180,6 @@ public class FunctionalUnit {
 		dest[unitCount] = -1;
 		A[unitCount] = 0;
 	}
-	
 
 	public boolean execute(int clockCycle, boolean writeOnce) {
 		if (isEmpty())
@@ -185,7 +189,7 @@ public class FunctionalUnit {
 			int cyclesLeft = start[i] + execTime[i] - clockCycle;
 			if (start[i] == -1 && issueTime[i] != clockCycle)
 				executeNewInstruction(clockCycle, i);
-			if (start[i] != -1 && cyclesLeft <= 0 && !ret){
+			if (start[i] != -1 && cyclesLeft <= 0 && !ret) {
 				write(i);
 				ret = true;
 			}
