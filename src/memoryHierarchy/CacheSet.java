@@ -77,7 +77,7 @@ public class CacheSet {
 			return null;
 	}
 
-	public CacheBlock writeByte(Word data, int tag, int offset) {
+	public CacheBlock writeByte(Word data, int tag, int offset) throws RuntimeException{
 		CacheBlock x = null;
 		for (int i = 0; i < blocks.size(); i++) {
 			x = blocks.get(i);
