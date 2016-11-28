@@ -186,9 +186,9 @@ public class FunctionalUnit {
 			return false;
 		boolean ret = writeOnce;
 		for (int i = 0; i < unitCount; i++) {
-			int cyclesLeft = start[i] + execTime[i] - clockCycle;
 			if (start[i] == -1 && issueTime[i] != clockCycle)
 				executeNewInstruction(clockCycle, i);
+			int cyclesLeft = start[i] + execTime[i] - clockCycle;
 			if (start[i] != -1 && cyclesLeft <= 0 && !ret) {
 				write(i);
 				ret = true;

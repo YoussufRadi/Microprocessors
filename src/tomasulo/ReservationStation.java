@@ -26,9 +26,9 @@ public class ReservationStation {
 			int addTime, int subNum, int subTime, int addINum, int addITime,
 			int nandNum, int nandTime, int mulNum, int mulTime) {
 		allStations = new FunctionalUnit[11];
-		allStations[0] = load = new FunctionalUnit("LOAD", loadNum, loadTime);
-		allStations[1] = store = new FunctionalUnit("STORE", storeNum,
+		allStations[0] = store = new FunctionalUnit("STORE", storeNum,
 				storeTime);
+		allStations[1] = load = new FunctionalUnit("LOAD", loadNum, loadTime);
 		allStations[2] = jmp = new FunctionalUnit("JMP", jmpNum, jmpTime);
 		allStations[3] = beq = new FunctionalUnit("BEQ", beqNum, beqTime);
 		allStations[4] = jalr = new FunctionalUnit("JALR", jalrNum, jalrTime);
