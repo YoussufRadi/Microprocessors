@@ -43,6 +43,23 @@ public class Instruction {
 		}
 
 	}
+	public void updatePC() {
+		switch (this.type) {
+		case "JMP":
+			jmpUpdate(this.regA, this.imm);
+			break;
+		case "BEQ":
+			beqUpdate(this.regA, this.regB, this.imm);
+			break;
+		case "JALR":
+			jalrUpdate(this.regA, this.regB);
+			break;
+		case "RET":
+			retUpdate(this.regA);
+			break;
+		default: Simulator.ISA_regs.setPC(Simulator.ISA_regs.getPC()+1);
+		}
+	}
 
 	public void execute() {
 		switch (this.type) {
@@ -185,19 +202,37 @@ public class Instruction {
 		int pc = Simulator.ISA_regs.getPC();
 		int address = pc + 1 + rA_value + immediate;
 
-		Simulator.ISA_regs.setPC(address);
+//		Simulator.ISA_regs.setPC(address);
 		this.destAddress = address;
 	}
+	
+	public void jmpUpdate(String rA_str, String imm_str) {
 
+		int rA_index = getRegIndex(rA_str);
+		int immediate = Integer.parseInt(imm_str);
+
+		int rA_value = Simulator.ISA_regs.readReg(rA_index);
+		int pc = Simulator.ISA_regs.getPC();
+		int address = pc + 1 + rA_value + immediate;
+
+		Simulator.ISA_regs.setPC(address);
+	}
 	public void jalr(String rA_str, String rB_str) {
 
 		int rA_index = getRegIndex(rA_str);
-		int rB_index = getRegIndex(rB_str);
 
 		int pc = Simulator.ISA_regs.getPC();
-		int rB_value = Simulator.ISA_regs.readReg(rB_index);
 
 		Simulator.ISA_regs.writeReg(rA_index, pc + 1);
+//		Simulator.ISA_regs.setPC(rB_value);
+	}
+	
+	public void jalrUpdate(String rA_str, String rB_str) {
+
+		int rB_index = getRegIndex(rB_str);
+
+		int rB_value = Simulator.ISA_regs.readReg(rB_index);
+
 		Simulator.ISA_regs.setPC(rB_value);
 	}
 
@@ -205,12 +240,33 @@ public class Instruction {
 
 		int rA_index = getRegIndex(rA_str);
 		int rA_value = Simulator.ISA_regs.readReg(rA_index);
-		Simulator.ISA_regs.setPC(rA_value);
+//		Simulator.ISA_regs.setPC(rA_value);
 
 		this.destAddress = rA_value;
 	}
+	
+	public void retUpdate(String rA_str) {
+
+		int rA_index = getRegIndex(rA_str);
+		int rA_value = Simulator.ISA_regs.readReg(rA_index);
+		
+		Simulator.ISA_regs.setPC(rA_value);
+		
+	}
 
 	public void beq(String rA_str, String rB_str, String imm_str) {
+
+		int immediate = Integer.parseInt(imm_str);
+
+		int pc = Simulator.ISA_regs.getPC();
+
+//		if ((isEqual && immediate > 0) || (!isEqual && immediate < 0)) {
+//			Simulator.ISA_regs.setPC(pc + 1 + immediate);
+//		}
+		this.destAddress = pc + 1 + immediate;
+	}
+	
+	public void beqUpdate(String rA_str, String rB_str, String imm_str) {
 		int rA_index = getRegIndex(rA_str);
 		int rB_index = getRegIndex(rB_str);
 		int immediate = Integer.parseInt(imm_str);
@@ -223,7 +279,7 @@ public class Instruction {
 		if ((isEqual && immediate > 0) || (!isEqual && immediate < 0)) {
 			Simulator.ISA_regs.setPC(pc + 1 + immediate);
 		}
-		this.destAddress = pc + 1 + immediate;
+		
 	}
 
 	public static int getRegIndex(String register) {

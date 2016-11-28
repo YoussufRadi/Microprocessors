@@ -12,6 +12,7 @@ public class FunctionalUnit {
 	private int[] execTime;
 	private int unitCount;
 	private int[] start;
+	private int[] issueTime;
 	private boolean[] busy;
 	private Instruction[] Op;
 	private Register[] Vj;
@@ -29,6 +30,7 @@ public class FunctionalUnit {
 		this.execTime = new int[numberOfInstances];
 		this.unitCount = 0;
 		this.start = new int[numberOfInstances];
+		this.issueTime = new int[numberOfInstances];
 		this.busy = new boolean[numberOfInstances];
 		this.Op = new Instruction[numberOfInstances];
 		this.Vj = new Register[numberOfInstances];
@@ -42,6 +44,7 @@ public class FunctionalUnit {
 		for (int i = 0; i < numberOfInstances; i++) {
 			this.execTime[i] = execTime;
 			start[i] = -1;
+			issueTime[i] = -1;
 			Qj[i] = -1;
 			Qk[i] = -1;
 			dest[i] = -1;
@@ -50,6 +53,26 @@ public class FunctionalUnit {
 
 	public String getName() {
 		return name;
+	}
+
+	public int getNumberOfInstances() {
+		return numberOfInstances;
+	}
+
+	public int getQj(int unit) {
+		return Qj[unit];
+	}
+
+	public void clearQj(int unit) {
+		Qj[unit] = -1;
+	}
+
+	public int getQk(int unit) {
+		return Qk[unit];
+	}
+
+	public void clearQk(int unit) {
+		Qk[unit] = -1;
 	}
 
 	public boolean hasOutput() {
@@ -78,10 +101,11 @@ public class FunctionalUnit {
 		return false;
 	}
 
-	public boolean issue(Instruction instruction, int ROBEntryNumber) {
+	public boolean issue(int clockCycle, Instruction instruction, int ROBEntryNumber) {
 		if (isFull())
 			return false;
 		busy[unitCount] = true;
+		issueTime[unitCount] = clockCycle;
 		Op[unitCount] = instruction;
 		Qj[unitCount] = Op[unitCount].getVj().getROBEnteryUsing();
 		if (Op[unitCount].getVk() != null)
@@ -99,6 +123,7 @@ public class FunctionalUnit {
 		if (Qj[unit] != -1 || Qk[unit] != -1)
 			return;
 		Op[unit].execute();
+		System.out.println("write in " + ((Register) Op[unit].getDestination()).getName() + " value : " + ((Register) Op[unit].getDestination()).getValue());
 		if (name.equals("LOAD") || name.equals("STORE"))
 			execTime[unit] = Op[unit].getAccessTime();
 		start[unit] = clockCycle;
@@ -112,8 +137,8 @@ public class FunctionalUnit {
 	public void write(int i) {
 		writeResult.add(dest[i]);
 		start[i] = -1;
+		issueTime[i] = -1;
 		busy[i] = false;
-		System.out.println("write in " + ((Register) Op[i].getDestination()).getName() + " value : " + ((Register) Op[i].getDestination()).getValue());
 		if (Op[i].getDestination() instanceof Register)
 			((Register) Op[i].getDestination()).setROBEnteryUsing(-1);
 		Op[i] = null;
@@ -122,18 +147,50 @@ public class FunctionalUnit {
 		dest[i] = -1;
 		A[i] = 0;
 		unitCount--;
+		shift(i);
 	}
+	
+	public void shift(int p){
+		for(int i = p; i < unitCount; i++){
+			execTime[i] = execTime[i+1];
+			start[i] = start[i+1];
+			issueTime[i] = start[i+1];
+			busy[i] = busy[i+1];
+			Op[i] = Op[i+1];
+			Vj[i] = Vj[i+1];
+			Vk[i] = Vk[i+1];
+			Qj[i] = Qj[i+1];
+			Qk[i] = Qk[i+1];
+			dest[i] = dest[i+1];
+			A[i] = A[i+1];
+		}
+		start[unitCount] = -1;
+		issueTime[unitCount] = -1;
+		busy[unitCount] = false;
+		Op[unitCount] = null;
+		Vj[unitCount] = null;
+		Vk[unitCount] = null;
+		Qj[unitCount] = -1;
+		Qk[unitCount] = -1;
+		dest[unitCount] = -1;
+		A[unitCount] = 0;
+	}
+	
 
-	public void execute(int clockCycle) {
+	public boolean execute(int clockCycle, boolean writeOnce) {
 		if (isEmpty())
-			return;
+			return false;
+		boolean ret = writeOnce;
 		for (int i = 0; i < unitCount; i++) {
 			int cyclesLeft = start[i] + execTime[i] - clockCycle;
-			if (start[i] == -1)
+			if (start[i] == -1 && issueTime[i] != clockCycle)
 				executeNewInstruction(clockCycle, i);
-			else if (cyclesLeft == 0)
+			if (start[i] != -1 && cyclesLeft <= 0 && !ret){
 				write(i);
+				ret = true;
+			}
 		}
+		return ret;
 	}
 
 }
