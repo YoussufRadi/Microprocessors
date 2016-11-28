@@ -619,7 +619,7 @@ public class TomasuloSimulator extends JFrame {
 		branchMispredictionLabel.setForeground(Color.white);
 		branchMispredictionLabel.setBounds(400, 250, 200, 35);
 		
-		JLabel branchMispredictionValue = new JLabel("##");
+		JLabel branchMispredictionValue = new JLabel(""+ this.branchMisprediction);
 		branchMispredictionValue.setForeground(Color.white);
 		branchMispredictionValue.setBounds(550, 250, 100, 35);
 		
@@ -700,7 +700,7 @@ public class TomasuloSimulator extends JFrame {
 
 		BufferedReader br = new BufferedReader(new FileReader(programFile));
 		String line = "";
-		int i = 3;
+		int i = 0;
 		while ((line = br.readLine()) != null) {
 			Simulator.instructionMemory.write(new Word(line), i);
 			i++;
@@ -714,6 +714,7 @@ public class TomasuloSimulator extends JFrame {
 		this.dCacheHitRatio = Simulator.dCacheHitRatio;
 		this.iAMAT = Simulator.iAMAT;
 		this.dAMAT = Simulator.dAMAT;
+		this.branchMisprediction = Simulator.MissPredictionsRatio;
 		launchPanelThree();
 	}
 

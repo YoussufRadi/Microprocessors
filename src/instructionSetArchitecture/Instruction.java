@@ -259,6 +259,8 @@ public class Instruction {
 
 	public void beq(String rA_str, String rB_str, String imm_str) {
 
+		Simulator.branches++;
+		
 		int rA_index = getRegIndex(rA_str);
 		int rB_index = getRegIndex(rB_str);
 		int immediate = Integer.parseInt(imm_str);
@@ -266,7 +268,8 @@ public class Instruction {
 		int rA_value = Simulator.ISA_regs.readReg(rA_index);
 		int rB_value = Simulator.ISA_regs.readReg(rB_index);
 		boolean isEqual = rA_value == rB_value;
-
+		
+		System.out.println("Hey from Instruction  : " + (isEqual && immediate > 0) );
 		if(isEqual && immediate > 0){
 			missPridiction = true;
 			this.destAddress = fetchPC + 1 + immediate;
