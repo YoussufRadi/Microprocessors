@@ -2,12 +2,16 @@ package memoryHierarchy;
 
 import java.security.acl.LastOwnerException;
 
+import exceptions.CacheMissException;
+
 public class MemoryHierarchy {
 
 	private Memory mainMemory;
 	private Cache[] caches;
+	private int[] cacheMisses;
 	private int totalAccessTime;
 	private int latestAccessTime;
+	
 
 	public Memory getMainMemory() {
 		return mainMemory;
@@ -46,6 +50,7 @@ public class MemoryHierarchy {
 	public MemoryHierarchy(Cache[] caches, int memoryAccessTime) {
 		mainMemory = new Memory(memoryAccessTime);
 		this.caches = caches;
+		this.cacheMisses = new int [caches.length];
 	}
 
 	public Word fetch(int address) throws RuntimeException {
@@ -68,7 +73,12 @@ public class MemoryHierarchy {
 				writeInUpperLevel(x, --c, address);
 				totalAccessTime += latestAccessTime;
 				return x[offset];
-			} catch (Exception e) {
+			} 
+			catch(CacheMissException exp){
+				this.cacheMisses[i]++;
+				continue;
+			}
+			catch (Exception e){
 				continue;
 			}
 
@@ -78,6 +88,10 @@ public class MemoryHierarchy {
 		writeInUpperLevel(x, caches.length - 1, address);
 		totalAccessTime += latestAccessTime;
 		return x[offset];
+	}
+
+	public int[] getCacheMisses() {
+		return cacheMisses;
 	}
 
 	private void writeInUpperLevel(Word[] bytes, int j, int address) {

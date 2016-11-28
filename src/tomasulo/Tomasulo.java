@@ -14,6 +14,15 @@ public class Tomasulo {
 	private int numberOfWays;
 	private int sizeBuffer;
 	private ArrayList<Integer> commitData;
+	private int instructionCount;
+
+	public int getInstructionCount() {
+		return instructionCount;
+	}
+
+	public void setInstructionCount(int instructionCount) {
+		this.instructionCount = instructionCount;
+	}
 
 	public Tomasulo(int numberOfWays, int sizeBuffer) {
 
@@ -82,6 +91,7 @@ public class Tomasulo {
 		for (int i = 0; i < waitBuffer.size(); i++) {
 			if (waitBuffer.get(i).getExpectedCycle() == currentCycle)
 				instructionBuffer.add(waitBuffer.remove(i).getInstruction());
+				instructionCount++;
 		}
 	}
 

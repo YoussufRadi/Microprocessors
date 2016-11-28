@@ -14,7 +14,9 @@ public class Simulator {
 	public static Tomasulo algorithm;
 	public static int clockCycle = 0;
 	public static boolean run = true;
-
+	//calculations
+	public static double IPC;
+	public static int totalExecutionTime;
 	public Simulator(int loadNum, int loadTime, int storeNum, int storeTime,
 			int jmpNum, int jmpTime, int beqNum, int beqTime, int jalrNum,
 			int jalrTime, int retNum, int retTime, int addNum, int addTime,
@@ -44,6 +46,9 @@ public class Simulator {
 			algorithm.commit(clockCycle);
 			clockCycle++;
 		}
+		IPC = algorithm.getInstructionCount()/clockCycle;
+		totalExecutionTime = clockCycle;
+		
 	}
 
 	public static void main(String[] args) {

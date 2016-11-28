@@ -42,7 +42,7 @@ public class CacheSet {
 				LRUList.add(blocks.get(i));
 				return blocks.get(i).getData();
 			}
-		throw new CacheMissException("Miss");
+		throw new CacheMissException("Read Miss");
 	}
 
 	public CacheBlock write(Word[] data, int tag, WritingPolicy policy) {
@@ -89,6 +89,7 @@ public class CacheSet {
 				return x;
 			}
 		}
-		return null;
+		throw new CacheMissException("Write Miss");
+		
 	}
 }
