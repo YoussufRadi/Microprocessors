@@ -33,10 +33,9 @@ public class Simulator {
 				retTime, addNum, addTime, subNum, subTime, addINum, addITime,
 				nandNum, nandTime, mulNum, mulTime);
 		algorithm = new Tomasulo(numberOfWays, sizeBuffer);
-		run();
 	}
 
-	private void run() {
+	public void run() {
 		while (run || !ROB.isEmpty()) {
 			algorithm.fetch();
 			algorithm.issue(clockCycle);
