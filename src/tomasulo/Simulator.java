@@ -29,8 +29,8 @@ public class Simulator {
 			Cache[] dataCaches, int memoryAccessTime, int ROBSize,
 			int numberOfWays, int sizeBuffer) {
 
-		this.iCacheHitRatio = new double[instructionCaches.length];
-		this.dCacheHitRatio = new double[dataCaches.length];
+		Simulator.iCacheHitRatio = new double[instructionCaches.length];
+		Simulator.dCacheHitRatio = new double[dataCaches.length];
 
 		ISA_regs = new ISA();
 		dataMemory = new MemoryHierarchy(dataCaches, memoryAccessTime);
@@ -88,7 +88,7 @@ public class Simulator {
 		return dCacheHitRatio;
 	}
 
-	public static void main(String[] args) {
+//	public static void main(String[] args) {
 		// Cache c = new Cache(2, 2, 1, WritingPolicy.WRITE_THROUGH, 5);
 		// Cache c1 = new Cache(4, 2, 1, WritingPolicy.WRITE_BACK, 5);
 		// Cache c2 = new Cache(8, 2, 1, WritingPolicy.WRITE_BACK, 5);
@@ -96,11 +96,6 @@ public class Simulator {
 		// Cache[] iCach = { c2 };
 		// new Simulator(1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10,
 		// 1, 10, 1, 10, 1, 10, iCach, dCach, 50, 10, 3, 10);
-
-		int x = 5;
-		int y = 2;
-		double z = (x + 0.0) / (y + 0.0);
-		System.out.println(z);
-	}
+//	}
 
 }

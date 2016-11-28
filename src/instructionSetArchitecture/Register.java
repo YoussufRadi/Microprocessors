@@ -5,7 +5,7 @@ public class Register {
 	private String name;
 	private int value;
 	private int ROBEnteryUsing;
-	
+
 	public Register(String name) {
 		this.name = name;
 		this.value = 3;
@@ -25,7 +25,8 @@ public class Register {
 	}
 
 	public void setValue(int value) {
-		this.value = value;
+		if (!this.name.equals("R0"))
+			this.value = value;
 	}
 
 	public int getROBEnteryUsing() {

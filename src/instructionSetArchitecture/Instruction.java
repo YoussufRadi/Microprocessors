@@ -12,6 +12,8 @@ public class Instruction {
 	private String imm;
 	private int accessTime;
 	private int destAddress;
+	private boolean missPridiction;
+	private int fetchPC;
 
 	public String getType() {
 		return type;
@@ -41,6 +43,7 @@ public class Instruction {
 		if (fields[0].equals("JALR")) {
 			this.regB = fields[2];
 		}
+		fetchPC = Simulator.ISA_regs.getPC();
 
 	}
 	public void updatePC() {
@@ -221,7 +224,7 @@ public class Instruction {
 
 		int rA_index = getRegIndex(rA_str);
 
-		int pc = Simulator.ISA_regs.getPC();
+		int pc = fetchPC+1;
 
 		Simulator.ISA_regs.writeReg(rA_index, pc + 1);
 //		Simulator.ISA_regs.setPC(rB_value);
@@ -256,30 +259,31 @@ public class Instruction {
 
 	public void beq(String rA_str, String rB_str, String imm_str) {
 
-		int immediate = Integer.parseInt(imm_str);
-
-		int pc = Simulator.ISA_regs.getPC();
-
-//		if ((isEqual && immediate > 0) || (!isEqual && immediate < 0)) {
-//			Simulator.ISA_regs.setPC(pc + 1 + immediate);
-//		}
-		this.destAddress = pc + 1 + immediate;
-	}
-	
-	public void beqUpdate(String rA_str, String rB_str, String imm_str) {
 		int rA_index = getRegIndex(rA_str);
 		int rB_index = getRegIndex(rB_str);
 		int immediate = Integer.parseInt(imm_str);
 
 		int rA_value = Simulator.ISA_regs.readReg(rA_index);
 		int rB_value = Simulator.ISA_regs.readReg(rB_index);
-		int pc = Simulator.ISA_regs.getPC();
 		boolean isEqual = rA_value == rB_value;
 
-		if ((isEqual && immediate > 0) || (!isEqual && immediate < 0)) {
-			Simulator.ISA_regs.setPC(pc + 1 + immediate);
+		if(isEqual && immediate > 0){
+			missPridiction = true;
+			this.destAddress = fetchPC + 1 + immediate;
 		}
-		
+		else if(!isEqual && immediate < 0) {
+			missPridiction = true;
+			this.destAddress = fetchPC + 1;
+		}
+	}
+	
+	public void beqUpdate(String rA_str, String rB_str, String imm_str) {
+		int immediate = Integer.parseInt(imm_str);
+		int pc = Simulator.ISA_regs.getPC();
+		if (immediate < 0)
+			Simulator.ISA_regs.setPC(pc + 1 + immediate);
+		else 
+			Simulator.ISA_regs.setPC(pc + 1);	
 	}
 
 	public static int getRegIndex(String register) {
@@ -292,7 +296,7 @@ public class Instruction {
 		if (this.type.equals("LW") || this.type.equals("ADD")
 				|| this.type.equals("SUB") || this.type.equals("NAND")
 				|| this.type.equals("MUL") || this.type.equals("ADDI")
-				|| this.type.equals("JALR")) {
+				|| this.type.equals("JALR")|| this.type.equals("SW")) {
 			int rA_index = getRegIndex(this.regA);
 			return Simulator.ISA_regs.getRegisters()[rA_index];
 		} else
@@ -335,6 +339,10 @@ public class Instruction {
 
 	public int getAccessTime() {
 		return this.accessTime;
+	}
+
+	public boolean isMissPridiction() {
+		return missPridiction;
 	}
 
 	// public static void main(String[] args) {

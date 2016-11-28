@@ -39,12 +39,12 @@ public class Tomasulo {
 		// instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
 		// instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
 
-//		Simulator.instructionMemory.write(new Word("ADD r0 r1 r2"), 3);
-//		Simulator.instructionMemory.write(new Word("ADD r3 r1 r2"), 4);
-//		Simulator.instructionMemory.write(new Word("SUB r4 r1 r2"), 5);
-//		Simulator.instructionMemory.write(new Word("ADD r5 r1 r2"), 6);
-//		Simulator.instructionMemory.write(new Word("ADD r6 r1 r2"), 7);
-//		Simulator.instructionMemory.write(new Word("SUB r7 r1 r2"), 8);
+		// Simulator.instructionMemory.write(new Word("ADD r0 r1 r2"), 3);
+		// Simulator.instructionMemory.write(new Word("ADD r3 r1 r2"), 4);
+		// Simulator.instructionMemory.write(new Word("SUB r4 r1 r2"), 5);
+		// Simulator.instructionMemory.write(new Word("ADD r5 r1 r2"), 6);
+		// Simulator.instructionMemory.write(new Word("ADD r6 r1 r2"), 7);
+		// Simulator.instructionMemory.write(new Word("SUB r7 r1 r2"), 8);
 
 	}
 
@@ -59,9 +59,9 @@ public class Tomasulo {
 	public void fetch() {
 
 		int currentCycle = Simulator.clockCycle;
-		for (int i = 0; i < waitBuffer.size(); i++) {			
+		for (int i = 0; i < waitBuffer.size(); i++) {
 			if (waitBuffer.get(i).getExpectedCycle() == currentCycle) {
-//				System.out.println(waitBuffer.get(i).getInstruction());
+				// System.out.println(waitBuffer.get(i).getInstruction());
 				instructionBuffer.add(waitBuffer.remove(i).getInstruction());
 				i--;
 				instructionCount++;
@@ -76,8 +76,8 @@ public class Tomasulo {
 			int pc = Simulator.ISA_regs.getPC();
 			if (this.isFull())
 				return;
-			Word x  = Simulator.instructionMemory.fetch(pc);
-//			System.out.println(x);
+			Word x = Simulator.instructionMemory.fetch(pc);
+			// System.out.println(x);
 			if (x == null) {
 				Simulator.run = false;
 				continue;
@@ -117,10 +117,13 @@ public class Tomasulo {
 			if (ROBentry != -1)
 				doneFlag = Simulator.RS.issue(clockCycle,
 						instructionBuffer.peek(), ROBentry);
+			else
+				return;
 			if (doneFlag) {
 				instructionBuffer.poll();
 				ROBentry = -1;
-			}
+			} else
+				return;
 		}
 	}
 
