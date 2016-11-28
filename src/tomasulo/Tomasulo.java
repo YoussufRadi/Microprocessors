@@ -15,6 +15,15 @@ public class Tomasulo {
 	private int numberOfWays;
 	private int sizeBuffer;
 	private ArrayList<Integer> commitData;
+	private int instructionCount;
+
+	public int getInstructionCount() {
+		return instructionCount;
+	}
+
+	public void setInstructionCount(int instructionCount) {
+		this.instructionCount = instructionCount;
+	}
 
 	public Tomasulo(int numberOfWays, int sizeBuffer) {
 

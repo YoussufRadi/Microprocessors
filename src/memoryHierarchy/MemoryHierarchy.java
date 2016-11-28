@@ -1,11 +1,24 @@
 package memoryHierarchy;
 
+import exceptions.CacheMissException;
+
 public class MemoryHierarchy {
 
 	private Memory mainMemory;
 	private Cache[] caches;
+	private int[] cacheMisses;
+	private int[] cacheAccesses;
 	private int totalAccessTime;
 	private int latestAccessTime;
+	private int access;
+	
+	public int getAccess() {
+		return access;
+	}
+
+	public int[] getCacheAccesses() {
+		return cacheAccesses;
+	}
 
 	public Memory getMainMemory() {
 		return mainMemory;
@@ -44,9 +57,13 @@ public class MemoryHierarchy {
 	public MemoryHierarchy(Cache[] caches, int memoryAccessTime) {
 		mainMemory = new Memory(memoryAccessTime);
 		this.caches = caches;
+		this.cacheMisses = new int[caches.length];
+		this.cacheAccesses = new int[caches.length];
+		access = 0;
 	}
 
 	public Word fetch(int address) throws RuntimeException {
+		access++;
 		int offsetBits = (int) (Math.log(caches[0].getLineSize()) / Math.log(2));
 		int offset = (int) (address % Math.pow(2, offsetBits));
 		latestAccessTime = 0;
@@ -60,12 +77,16 @@ public class MemoryHierarchy {
 					/ caches[i].getmWays()) / Math.log(2));
 			int tag = (int) (address / Math.pow(2, offsetBits) / Math.pow(2,
 					indexBits));
+			this.cacheAccesses[i]++;
 			try {
 				x = caches[i].fetch(index, tag);
 				int c = i;
 				writeInUpperLevel(x, --c, address);
 				totalAccessTime += latestAccessTime;
 				return x[offset];
+			} catch (CacheMissException exp) {
+				this.cacheMisses[i]++;
+				continue;
 			} catch (Exception e) {
 				continue;
 			}
@@ -78,10 +99,14 @@ public class MemoryHierarchy {
 		return x[offset];
 	}
 
+	public int[] getCacheMisses() {
+		return cacheMisses;
+	}
+
 	private void writeInUpperLevel(Word[] bytes, int j, int address) {
 		if (j < 0)
 			return;
-		latestAccessTime+= caches[j].getAccessTime();
+		latestAccessTime += caches[j].getAccessTime();
 		int offsetBits = (int) (Math.log(caches[0].getLineSize()) / Math.log(2));
 		int newIndex = (int) (address / Math.pow(2, offsetBits))
 				% caches[j].getSets().length;
@@ -99,6 +124,7 @@ public class MemoryHierarchy {
 	}
 
 	public void write(Word data, int address) {
+		access++;
 		latestAccessTime = 0;
 		CacheBlock x = null;
 		int offsetBits = (int) (Math.log(caches[0].getLineSize()) / Math.log(2));
@@ -113,21 +139,27 @@ public class MemoryHierarchy {
 			int tag = (int) (address / Math.pow(2, offsetBits) / Math.pow(2,
 					indexBits));
 			Word dataCloned = (Word) data.clone();
-			x = caches[i].writeByte(dataCloned, index, tag, offset);
+			this.cacheAccesses[i]++;
+			try {
+				x = caches[i].writeByte(dataCloned, index, tag, offset);
 
-			if (x != null) {
-				int c = i;
-				if (caches[i].getPolicy() != WritingPolicy.WRITE_BACK)
-					writeInLowerLevel(x, ++c, address);
+				if (x != null) {
+					int c = i;
+					if (caches[i].getPolicy() != WritingPolicy.WRITE_BACK)
+						writeInLowerLevel(x, ++c, address);
 
-				Word[] y = new Word[x.getData().length];
-				for (int z = 0; z < y.length; z++)
-					if (x.getData()[z] != null)
-						y[z] = (Word) x.getData()[z].clone();
-				c = i;
-				writeInUpperLevel(x.getData(), --c, address);
-				totalAccessTime += latestAccessTime;
-				return;
+					Word[] y = new Word[x.getData().length];
+					for (int z = 0; z < y.length; z++)
+						if (x.getData()[z] != null)
+							y[z] = (Word) x.getData()[z].clone();
+					c = i;
+					writeInUpperLevel(x.getData(), --c, address);
+					totalAccessTime += latestAccessTime;
+					return;
+				}
+			} catch (CacheMissException exp) {
+				this.cacheMisses[i]++;
+				continue;
 			}
 		}
 		if (x == null) {
@@ -148,15 +180,15 @@ public class MemoryHierarchy {
 			if (x.getData()[z] != null)
 				y[z] = (Word) x.getData()[z].clone();
 		if (i >= caches.length - 1) {
-			
-			latestAccessTime+= mainMemory.getAccessTime();
+
+			latestAccessTime += mainMemory.getAccessTime();
 
 			mainMemory.write(y, address, offset);
 			return;
 		} else if (caches[i - 1].getPolicy()
 				.equals(WritingPolicy.WRITE_THROUGH)) {
-			
-			latestAccessTime+= caches[i].getAccessTime();
+
+			latestAccessTime += caches[i].getAccessTime();
 
 			int newIndex = (int) (address / Math.pow(2, offsetBits))
 					% caches[i].getSets().length;
@@ -171,7 +203,7 @@ public class MemoryHierarchy {
 			c = i;
 			if (caches[i].getPolicy().equals(WritingPolicy.WRITE_THROUGH))
 				writeInLowerLevel(x, ++c, address);
-			
+
 		}
 	}
 }
