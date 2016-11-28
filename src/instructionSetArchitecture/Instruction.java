@@ -220,10 +220,8 @@ public class Instruction {
 	public void jalr(String rA_str, String rB_str) {
 
 		int rA_index = getRegIndex(rA_str);
-		int rB_index = getRegIndex(rB_str);
 
 		int pc = Simulator.ISA_regs.getPC();
-		int rB_value = Simulator.ISA_regs.readReg(rB_index);
 
 		Simulator.ISA_regs.writeReg(rA_index, pc + 1);
 //		Simulator.ISA_regs.setPC(rB_value);
@@ -231,10 +229,8 @@ public class Instruction {
 	
 	public void jalrUpdate(String rA_str, String rB_str) {
 
-		int rA_index = getRegIndex(rA_str);
 		int rB_index = getRegIndex(rB_str);
 
-		int pc = Simulator.ISA_regs.getPC();
 		int rB_value = Simulator.ISA_regs.readReg(rB_index);
 
 		Simulator.ISA_regs.setPC(rB_value);
@@ -259,14 +255,10 @@ public class Instruction {
 	}
 
 	public void beq(String rA_str, String rB_str, String imm_str) {
-		int rA_index = getRegIndex(rA_str);
-		int rB_index = getRegIndex(rB_str);
+
 		int immediate = Integer.parseInt(imm_str);
 
-		int rA_value = Simulator.ISA_regs.readReg(rA_index);
-		int rB_value = Simulator.ISA_regs.readReg(rB_index);
 		int pc = Simulator.ISA_regs.getPC();
-		boolean isEqual = rA_value == rB_value;
 
 //		if ((isEqual && immediate > 0) || (!isEqual && immediate < 0)) {
 //			Simulator.ISA_regs.setPC(pc + 1 + immediate);

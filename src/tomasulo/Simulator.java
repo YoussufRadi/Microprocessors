@@ -37,12 +37,8 @@ public class Simulator {
 	}
 
 	private void run() {
-//		while (run) {
-
-		while(clockCycle < 1000){
-
+		while (run || !ROB.isEmpty()) {
 			algorithm.fetch();
-
 			algorithm.issue(clockCycle);
 			algorithm.execute(clockCycle);
 			algorithm.write(clockCycle);

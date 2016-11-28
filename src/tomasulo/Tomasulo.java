@@ -5,7 +5,6 @@ import instructionSetArchitecture.Instruction;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-
 import memoryHierarchy.Word;
 
 public class Tomasulo {
@@ -24,18 +23,18 @@ public class Tomasulo {
 		this.sizeBuffer = sizeBuffer;
 		commitData = new ArrayList<Integer>();
 
-		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
-		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
-		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
-		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
-		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
+//		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
+//		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
+//		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
+//		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
+//		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
 
-		Simulator.instructionMemory.write(new Word("ADD r0 r1 r2"), 3);
-		Simulator.instructionMemory.write(new Word("ADD r3 r1 r2"), 4);
-		Simulator.instructionMemory.write(new Word("SUB r4 r1 r2"), 5);
-		Simulator.instructionMemory.write(new Word("ADD r5 r1 r2"), 6);
-		Simulator.instructionMemory.write(new Word("ADD r6 r1 r2"), 7);
-		Simulator.instructionMemory.write(new Word("SUB r7 r1 r2"), 8);
+		 Simulator.instructionMemory.write(new Word("ADD r0 r1 r2"), 3);
+		 Simulator.instructionMemory.write(new Word("ADD r3 r1 r2"), 4);
+		 Simulator.instructionMemory.write(new Word("SUB r4 r1 r2"), 5);
+		 Simulator.instructionMemory.write(new Word("ADD r5 r1 r2"), 6);
+		 Simulator.instructionMemory.write(new Word("ADD r6 r1 r2"), 7);
+		 Simulator.instructionMemory.write(new Word("SUB r7 r1 r2"), 8);
 
 	}
 
@@ -53,19 +52,19 @@ public class Tomasulo {
 		int largestAccessTime = 0;
 		for (int i = 0; i < numberOfWays; i++) {
 			int pc = Simulator.ISA_regs.getPC();
-			// System.out.println(pc);
 			if (this.isFull())
 				return;
 
-			if (Simulator.instructionMemory.fetch(pc) == null)
+			if (Simulator.instructionMemory.fetch(pc) == null){
+				Simulator.run = false;
 				continue;
+			}
 			String word = Simulator.instructionMemory.fetch(pc).getData();
 			Instruction instruction = new Instruction(word);
 
 			if (Simulator.instructionMemory.getLatestAccessTime() > largestAccessTime)
 				largestAccessTime = Simulator.instructionMemory
 						.getLatestAccessTime();
-			// System.out.println(instruction.getType());
 			waitBuffer.add(new InstExtend(instruction));
 			instruction.updatePC();
 		}
@@ -81,10 +80,8 @@ public class Tomasulo {
 		}
 
 		for (int i = 0; i < waitBuffer.size(); i++) {
-
-			if (waitBuffer.get(i).getExpectedCycle() == currentCycle) {
+			if (waitBuffer.get(i).getExpectedCycle() == currentCycle)
 				instructionBuffer.add(waitBuffer.remove(i).getInstruction());
-			}
 		}
 	}
 

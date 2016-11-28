@@ -185,7 +185,7 @@ public class FunctionalUnit {
 			int cyclesLeft = start[i] + execTime[i] - clockCycle;
 			if (start[i] == -1 && issueTime[i] != clockCycle)
 				executeNewInstruction(clockCycle, i);
-			else if (cyclesLeft <= 0 && !ret){
+			if (start[i] != -1 && cyclesLeft <= 0 && !ret){
 				write(i);
 				ret = true;
 			}
