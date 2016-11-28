@@ -5,15 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
 import javax.swing.*;
-
 import memoryHierarchy.Cache;
 import memoryHierarchy.Word;
 import memoryHierarchy.WritingPolicy;
@@ -21,6 +15,10 @@ import tomasulo.Simulator;
 
 public class TomasuloSimulator extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// global variables
 	private File programFile;
 	private int superscalarity;
@@ -59,8 +57,8 @@ public class TomasuloSimulator extends JFrame {
 	private JButton chooseFile;
 	private JLabel chooseFileLabel;
 
-	private JLabel programOriginLabel;
-	private JTextField programOriginText;
+	// private JLabel programOriginLabel;
+	// private JTextField programOriginText;
 
 	private JLabel mWayLabel;
 	private JTextField mWay;
@@ -123,7 +121,8 @@ public class TomasuloSimulator extends JFrame {
 		mWay = new JTextField("n");
 		mWay.setBounds(200, 120, 40, 35);
 
-		numberOfRSLabel = new JLabel("Specify the number of reservation stations for each class of instructions:");
+		numberOfRSLabel = new JLabel(
+				"Specify the number of reservation stations for each class of instructions:");
 		numberOfRSLabel.setBounds(20, 160, 500, 35);
 		numberOfRSLabel.setForeground(Color.white);
 
@@ -150,7 +149,8 @@ public class TomasuloSimulator extends JFrame {
 		JTextField addiFUsField = new JTextField("addi");
 		addiFUsField.setBounds(520, 195, 40, 35);
 
-		JLabel latenciesLabel = new JLabel("Specify the latency for each class of instructions:");
+		JLabel latenciesLabel = new JLabel(
+				"Specify the latency for each class of instructions:");
 		latenciesLabel.setBounds(20, 225, 500, 35);
 		latenciesLabel.setForeground(Color.white);
 
@@ -195,22 +195,23 @@ public class TomasuloSimulator extends JFrame {
 		dCacheNumberLabel.setForeground(Color.white);
 		dCacheNumberText = new JTextField(dCacheLevels);
 		dCacheNumberText.setBounds(20, 470, 40, 35);
-		
+
 		JLabel accessTimeLabel = new JLabel("Memory Access Time");
 		accessTimeLabel.setBounds(300, 360, 200, 35);
 		accessTimeLabel.setForeground(Color.white);
-		
+
 		JTextField accessTime = new JTextField();
 		accessTime.setBounds(300, 400, 35, 35);
-		
+
 		JLabel instructionBufferLabel = new JLabel("Instruction Buffer Size");
 		instructionBufferLabel.setBounds(500, 360, 200, 35);
 		instructionBufferLabel.setForeground(Color.white);
-		
+
 		JTextField instructionBufferSize = new JTextField();
 		instructionBufferSize.setBounds(500, 400, 35, 35);
-		
-		error = new JLabel("An error occured, please make sure you entered the settings correctly");
+
+		error = new JLabel(
+				"An error occured, please make sure you entered the settings correctly");
 		error.setForeground(Color.red);
 		error.setBounds(20, 530, 500, 35);
 		error.setVisible(false);
@@ -249,15 +250,18 @@ public class TomasuloSimulator extends JFrame {
 					nandLat = Integer.parseInt(nandLatField.getText());
 					addiLat = Integer.parseInt(addiLatField.getText());
 					memoryAccessTime = Integer.parseInt(accessTime.getText());
-					instructionBuffer = Integer.parseInt(instructionBufferSize.getText());
+					instructionBuffer = Integer.parseInt(instructionBufferSize
+							.getText());
 					ROBSize = Integer.parseInt(ROBSizeText.getText());
 					try {
-						iCacheLevels = Integer.parseInt(iCacheNumberText.getText());
+						iCacheLevels = Integer.parseInt(iCacheNumberText
+								.getText());
 					} catch (Exception e2) {
 						iCacheLevels = 1;
 					}
 					try {
-						dCacheLevels = Integer.parseInt(dCacheNumberText.getText());
+						dCacheLevels = Integer.parseInt(dCacheNumberText
+								.getText());
 					} catch (Exception e2) {
 						dCacheLevels = 1;
 					}
@@ -321,8 +325,8 @@ public class TomasuloSimulator extends JFrame {
 	public void launchPanelTwo() {
 		this.remove(panelOne);
 
-//		iCacheLevels = 2;
-//		dCacheLevels = 2;
+		// iCacheLevels = 2;
+		// dCacheLevels = 2;
 
 		panelTwo = new JPanel();
 		panelTwo.setBackground(Color.black);
@@ -341,7 +345,7 @@ public class TomasuloSimulator extends JFrame {
 		JTextField iLineSizeText = new JTextField();
 		iLineSizeText.setBounds(300, 10, 60, 35);
 
-		JLabel siLabel = new JLabel("Size in Bytes");
+		JLabel siLabel = new JLabel("Size in Words");
 		siLabel.setForeground(Color.white);
 		siLabel.setBounds(80, 50, 100, 35);
 
@@ -352,7 +356,7 @@ public class TomasuloSimulator extends JFrame {
 		JLabel wiLabel = new JLabel("Write Policy, 0=WT, 1=WB");
 		wiLabel.setForeground(Color.white);
 		wiLabel.setBounds(320, 50, 200, 35);
-		
+
 		JLabel aiLabel = new JLabel("Access Time");
 		aiLabel.setForeground(Color.white);
 		aiLabel.setBounds(520, 50, 200, 35);
@@ -392,7 +396,7 @@ public class TomasuloSimulator extends JFrame {
 		JTextField dLineSizeText = new JTextField();
 		dLineSizeText.setBounds(300, 260, 60, 35);
 
-		JLabel sdLabel = new JLabel("Size in Bytes");
+		JLabel sdLabel = new JLabel("Size in Words");
 		sdLabel.setForeground(Color.white);
 		sdLabel.setBounds(80, 300, 100, 35);
 
@@ -403,7 +407,7 @@ public class TomasuloSimulator extends JFrame {
 		JLabel wdLabel = new JLabel("Write Policy, 0=WT, 1=WB");
 		wdLabel.setForeground(Color.white);
 		wdLabel.setBounds(320, 300, 200, 35);
-		
+
 		JLabel adLabel = new JLabel("Access Time");
 		adLabel.setForeground(Color.white);
 		adLabel.setBounds(520, 300, 200, 35);
@@ -446,17 +450,21 @@ public class TomasuloSimulator extends JFrame {
 						WritingPolicy p = WritingPolicy.WRITE_BACK;
 						if (Integer.parseInt(wi[i].getText()) == 0)
 							p = WritingPolicy.WRITE_THROUGH;
-						iCache[i] = new Cache(Integer.parseInt(si[i].getText()), iLineSize,
-								Integer.parseInt(mi[i].getText()), p, Integer.parseInt(ai[i].getText()));
+						iCache[i] = new Cache(
+								Integer.parseInt(si[i].getText()), iLineSize,
+								Integer.parseInt(mi[i].getText()), p, Integer
+										.parseInt(ai[i].getText()));
 					}
 					for (int i = 0; i < dCacheLevels; i++) {
 						WritingPolicy p = WritingPolicy.WRITE_BACK;
 						if (Integer.parseInt(wd[i].getText()) == 0)
 							p = WritingPolicy.WRITE_THROUGH;
-						dCache[i] = new Cache(Integer.parseInt(sd[i].getText()), dLineSize,
-								Integer.parseInt(md[i].getText()), p, Integer.parseInt(ad[i].getText()));
+						dCache[i] = new Cache(
+								Integer.parseInt(sd[i].getText()), dLineSize,
+								Integer.parseInt(md[i].getText()), p, Integer
+										.parseInt(ad[i].getText()));
+						startSimulator(iCache, dCache);
 					}
-					
 
 					// System.out.println("Line Size for I = "+iLineSize);
 					// System.out.println("Line Size for D = "+dLineSize);
@@ -475,7 +483,8 @@ public class TomasuloSimulator extends JFrame {
 			}
 		});
 
-		error = new JLabel("An error occured, please make sure you entered the settings correctly");
+		error = new JLabel(
+				"An error occured, please make sure you entered the settings correctly");
 		error.setForeground(Color.red);
 		error.setBounds(20, 530, 500, 35);
 		error.setVisible(false);
@@ -505,12 +514,15 @@ public class TomasuloSimulator extends JFrame {
 
 	}
 
-	public void startSimulator(Cache[] iCaches, Cache[] dCaches) throws IOException {
+	public void startSimulator(Cache[] iCaches, Cache[] dCaches)
+			throws IOException {
 
-		Simulator s = new Simulator(loadFUs, loadLat, storeFUs, storeLat, jmpFUs, jmpLat, breqFUs, breqLat, jalFUs,
-				jalLat, retFUs, retLat, addFUs, addLat, subFUs, subLat, addiFUs, addiLat, nandFUs, nandLat, multiplyFUs,
-				multiplyLat, iCaches, dCaches, memoryAccessTime, ROBSize, superscalarity, instructionBuffer);
-		
+		Simulator s = new Simulator(loadFUs, loadLat, storeFUs, storeLat,
+				jmpFUs, jmpLat, breqFUs, breqLat, jalFUs, jalLat, retFUs,
+				retLat, addFUs, addLat, subFUs, subLat, addiFUs, addiLat,
+				nandFUs, nandLat, multiplyFUs, multiplyLat, iCaches, dCaches,
+				memoryAccessTime, ROBSize, superscalarity, instructionBuffer);
+
 		BufferedReader br = new BufferedReader(new FileReader(programFile));
 		String line = "";
 		int i = 0;
@@ -522,6 +534,6 @@ public class TomasuloSimulator extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		TomasuloSimulator window = new TomasuloSimulator();
+		new TomasuloSimulator();
 	}
 }

@@ -34,7 +34,7 @@ public class CacheSet {
 		this.setLineSize(lineSize);
 	}
 
-	public Word[] fetch(int tag) throws RuntimeException {
+	public Word[] fetch(int tag) {
 		for (int i = 0; i < this.blocks.size(); i++)
 			if (blocks.get(i).getTag() == tag) {
 				if (LRUList.contains(blocks.get(i)))

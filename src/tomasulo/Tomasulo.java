@@ -1,11 +1,9 @@
 package tomasulo;
 
 import instructionSetArchitecture.Instruction;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-import memoryHierarchy.Word;
 
 public class Tomasulo {
 
@@ -29,12 +27,12 @@ public class Tomasulo {
 //		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
 //		instructionBuffer.add(new Instruction("ADD R0 R1 R2"));
 
-		 Simulator.instructionMemory.write(new Word("ADD r0 r1 r2"), 3);
-		 Simulator.instructionMemory.write(new Word("ADD r3 r1 r2"), 4);
-		 Simulator.instructionMemory.write(new Word("SUB r4 r1 r2"), 5);
-		 Simulator.instructionMemory.write(new Word("ADD r5 r1 r2"), 6);
-		 Simulator.instructionMemory.write(new Word("ADD r6 r1 r2"), 7);
-		 Simulator.instructionMemory.write(new Word("SUB r7 r1 r2"), 8);
+//		 Simulator.instructionMemory.write(new Word("ADD r0 r1 r2"), 3);
+//		 Simulator.instructionMemory.write(new Word("ADD r3 r1 r2"), 4);
+//		 Simulator.instructionMemory.write(new Word("SUB r4 r1 r2"), 5);
+//		 Simulator.instructionMemory.write(new Word("ADD r5 r1 r2"), 6);
+//		 Simulator.instructionMemory.write(new Word("ADD r6 r1 r2"), 7);
+//		 Simulator.instructionMemory.write(new Word("SUB r7 r1 r2"), 8);
 
 	}
 

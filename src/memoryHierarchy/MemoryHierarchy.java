@@ -1,7 +1,5 @@
 package memoryHierarchy;
 
-import java.security.acl.LastOwnerException;
-
 public class MemoryHierarchy {
 
 	private Memory mainMemory;
