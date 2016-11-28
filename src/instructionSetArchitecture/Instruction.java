@@ -13,7 +13,7 @@ public class Instruction {
 	private int accessTime;
 	private int destAddress;
 	private boolean missPridiction;
-	private int fetchPC;
+	public int fetchPC;
 
 	public String getType() {
 		return type;
@@ -43,7 +43,7 @@ public class Instruction {
 		if (fields[0].equals("JALR")) {
 			this.regB = fields[2];
 		}
-		fetchPC = Simulator.ISA_regs.getPC();
+		fetchPC = Simulator.ISA_regs.getPC()+1;
 
 	}
 	public void updatePC() {
@@ -296,7 +296,7 @@ public class Instruction {
 		if (this.type.equals("LW") || this.type.equals("ADD")
 				|| this.type.equals("SUB") || this.type.equals("NAND")
 				|| this.type.equals("MUL") || this.type.equals("ADDI")
-				|| this.type.equals("JALR")|| this.type.equals("SW")) {
+				|| this.type.equals("JALR")) {
 			int rA_index = getRegIndex(this.regA);
 			return Simulator.ISA_regs.getRegisters()[rA_index];
 		} else
