@@ -49,10 +49,20 @@ public class TomasuloSimulator extends JFrame {
 	private int dCacheLevels;
 	private int memoryAccessTime;
 	private int instructionBuffer;
-
+	
+	// output global variables	
+	private double IPC;
+	private int totalExecutionTime;
+	public double[] iCacheHitRatio;
+	public double[] dCacheHitRatio;
+	public double iAMAT;
+	public double dAMAT;
+	public double branchMisprediction;
+	
 	// panelOne components
 	private JPanel panelOne;
 	private JPanel panelTwo;
+	private JPanel panelThree;
 
 	private JButton chooseFile;
 	private JLabel chooseFileLabel;
@@ -253,7 +263,9 @@ public class TomasuloSimulator extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (programFile == null) {
 					error.setVisible(true);
-				}
+				} 
+				else
+					
 				try {
 					superscalarity = Integer.parseInt(mWay.getText());
 					loadFUs = Integer.parseInt(loadFUsField.getText());
@@ -411,7 +423,7 @@ public class TomasuloSimulator extends JFrame {
 			mi[i].setBounds(200, 80 + (i * 30), 35, 35);
 			panelTwo.add(mi[i]);
 			wi[i] = new JTextField();
-			wi[i].setText("1");
+			wi[i].setText("0");
 			wi[i].setBounds(320, 80 + (i * 30), 35, 35);
 			panelTwo.add(wi[i]);
 			ai[i] = new JTextField();
@@ -466,7 +478,7 @@ public class TomasuloSimulator extends JFrame {
 			md[i].setBounds(200, 330 + (i * 30), 35, 35);
 			panelTwo.add(md[i]);
 			wd[i] = new JTextField();
-			wd[i].setText("1");
+			wd[i].setText("0");
 			wd[i].setBounds(320, 330 + (i * 30), 35, 35);
 			panelTwo.add(wd[i]);
 			ad[i] = new JTextField();
@@ -527,8 +539,7 @@ public class TomasuloSimulator extends JFrame {
 			}
 		});
 
-		error = new JLabel(
-				"An error occured, please make sure you entered the settings correctly");
+		error = new JLabel("An error occured, please make sure you entered the settings correctly");
 		error.setForeground(Color.red);
 		error.setBounds(20, 530, 500, 35);
 		error.setVisible(false);
@@ -557,6 +568,125 @@ public class TomasuloSimulator extends JFrame {
 		this.repaint();
 
 	}
+	
+	public void launchPanelThree(){
+		this.remove(panelTwo);
+		
+//		iCacheLevels = 3;
+//		dCacheLevels = 2;
+		
+		panelThree = new JPanel();
+		panelThree.setBackground(Color.black);
+		panelThree.setLayout(null);
+		panelThree.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 3));
+		panelThree.setBounds(0, 0, 800, 578);
+		
+		JLabel totalTimeLabel = new JLabel("Total execution time in terms of cycles: ");
+		totalTimeLabel.setForeground(Color.white);
+		totalTimeLabel.setBounds(20,20,300,35);
+		
+		JLabel totalTime = new JLabel(""+this.totalExecutionTime);
+		totalTime.setForeground(Color.white);
+		totalTime.setBounds(300,20,90,35);
+		
+		JLabel ipcLabel = new JLabel("IPC: ");
+		ipcLabel.setForeground(Color.white);
+		ipcLabel.setBounds(400, 20, 50, 35);
+		
+		JLabel ipcValue = new JLabel(""+this.IPC);
+		ipcValue.setForeground(Color.white);
+		ipcValue.setBounds(450, 20, 100, 35);
+		
+		JLabel amatLabelI = new JLabel("AMAT for I-Memory: ");
+		amatLabelI.setForeground(Color.white);
+		amatLabelI.setBounds(400, 150, 150, 35);
+		
+		JLabel amatValueI = new JLabel(""+this.iAMAT);
+		amatValueI.setForeground(Color.white);
+		amatValueI.setBounds(550, 150, 100, 35);
+		
+		JLabel amatLabelD = new JLabel("AMAT for D-Memory: ");
+		amatLabelD.setForeground(Color.white);
+		amatLabelD.setBounds(400, 200, 150, 35);
+		
+		JLabel amatValueD = new JLabel(""+this.dAMAT);
+		amatValueD.setForeground(Color.white);
+		amatValueD.setBounds(550, 200, 100, 35);
+		
+		JLabel branchMispredictionLabel = new JLabel("Branch misprediction: ");
+		branchMispredictionLabel.setForeground(Color.white);
+		branchMispredictionLabel.setBounds(400, 250, 200, 35);
+		
+		JLabel branchMispredictionValue = new JLabel("##");
+		branchMispredictionValue.setForeground(Color.white);
+		branchMispredictionValue.setBounds(550, 250, 100, 35);
+		
+		JLabel hitRatioI = new JLabel("Hit ratio for I-Cache:");
+		hitRatioI.setForeground(Color.white);
+		hitRatioI.setBounds(20,60,250,35);
+		
+		JLabel [] hitRatioLabelsI = new JLabel[iCacheLevels];
+		JLabel [] hitRatioValuesI = new JLabel[iCacheLevels];
+		
+		for(int i = 0; i < iCacheLevels; i++){
+			hitRatioLabelsI[i] = new JLabel("L"+(i+1));
+			hitRatioLabelsI[i].setForeground(Color.white);
+			hitRatioLabelsI[i].setBounds(20, 100+(i*30), 100, 35);
+			panelThree.add(hitRatioLabelsI[i]);
+			
+			hitRatioValuesI[i] = new JLabel(""+this.iCacheHitRatio[i]);
+			hitRatioValuesI[i].setForeground(Color.white);
+			hitRatioValuesI[i].setBounds(100, 100+(i*30), 100, 35);
+			panelThree.add(hitRatioValuesI[i]);
+		}
+		
+		JLabel hitRatioD = new JLabel("Hit ratio for D-Cache:");
+		hitRatioD.setForeground(Color.white);
+		hitRatioD.setBounds(20,300,250,35);
+		
+		JLabel [] hitRatioLabelsD = new JLabel[dCacheLevels];
+		JLabel [] hitRatioValuesD = new JLabel[dCacheLevels];
+		
+		for(int i = 0; i < dCacheLevels; i++){
+			hitRatioLabelsD[i] = new JLabel("L"+(i+1));
+			hitRatioLabelsD[i].setForeground(Color.white);
+			hitRatioLabelsD[i].setBounds(20, 340+(i*30), 100, 35);
+			panelThree.add(hitRatioLabelsD[i]);
+			
+			hitRatioValuesD[i] = new JLabel(""+this.dCacheHitRatio[i]);
+			hitRatioValuesD[i].setForeground(Color.white);
+			hitRatioValuesD[i].setBounds(100, 340+(i*30), 100, 35);
+			panelThree.add(hitRatioValuesD[i]);
+		}
+		
+		JButton startOver = new JButton("Start Over");
+		startOver.setBounds(350, 500, 100, 35);
+		startOver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Start Over
+				launchPanelOne();
+			}
+		});
+		
+		panelThree.add(totalTimeLabel);
+		panelThree.add(totalTime);
+		panelThree.add(ipcLabel);
+		panelThree.add(ipcValue);
+		panelThree.add(amatLabelI);
+		panelThree.add(amatLabelD);
+		panelThree.add(amatValueI);
+		panelThree.add(amatValueD);
+		panelThree.add(branchMispredictionLabel);
+		panelThree.add(branchMispredictionValue);
+		panelThree.add(hitRatioI);
+		panelThree.add(hitRatioD);
+		panelThree.add(startOver);
+		
+		this.add(panelThree);
+		this.revalidate();
+		this.repaint();
+	}
+
 
 	public void startSimulator(Cache[] iCaches, Cache[] dCaches)
 			throws IOException {
@@ -575,6 +705,14 @@ public class TomasuloSimulator extends JFrame {
 		}
 		br.close();
 		s.run();
+		System.out.println("IPC : " + Simulator.IPC);
+		this.IPC = Simulator.IPC;
+		this.totalExecutionTime = Simulator.totalExecutionTime-1;
+		this.iCacheHitRatio = Simulator.iCacheHitRatio;
+		this.dCacheHitRatio = Simulator.dCacheHitRatio;
+		this.iAMAT = Simulator.iAMAT;
+		this.dAMAT = Simulator.dAMAT;
+		launchPanelThree();
 	}
 
 	public static void main(String[] args) {

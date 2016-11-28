@@ -58,7 +58,8 @@ public class Simulator {
 			algorithm.commit(clockCycle);
 			clockCycle++;
 		}
-		IPC = algorithm.getInstructionCount() / clockCycle;
+		System.out.println(algorithm.getInstructionCount());
+		IPC = (algorithm.getInstructionCount()+0.0) / (clockCycle+0.0);
 		totalExecutionTime = clockCycle;
 
 		int[] iCacheMisses = instructionMemory.getCacheMisses();

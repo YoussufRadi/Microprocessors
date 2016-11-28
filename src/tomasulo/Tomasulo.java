@@ -64,6 +64,7 @@ public class Tomasulo {
 //				System.out.println(waitBuffer.get(i).getInstruction());
 				instructionBuffer.add(waitBuffer.remove(i).getInstruction());
 				i--;
+				instructionCount++;
 			}
 		}
 
