@@ -113,7 +113,7 @@ public class TomasuloSimulator extends JFrame {
 		chooseFileLabel = new JLabel("No file attached");
 		chooseFileLabel.setBounds(20, 20, 500, 35);
 		chooseFileLabel.setForeground(Color.white);
-
+		
 		mWayLabel = new JLabel("Specify the superscalarity");
 		mWayLabel.setForeground(Color.white);
 		mWayLabel.setBounds(20, 120, 250, 35);
@@ -126,27 +126,38 @@ public class TomasuloSimulator extends JFrame {
 		numberOfRSLabel.setBounds(20, 160, 500, 35);
 		numberOfRSLabel.setForeground(Color.white);
 
-		JTextField addFUsField = new JTextField("add");
+//		JTextField addFUsField = new JTextField("add");
+		JTextField addFUsField = new JTextField("1");
 		addFUsField.setBounds(20, 195, 40, 35);
-		JTextField multiplyFUsField = new JTextField("mult");
+//		JTextField multiplyFUsField = new JTextField("mult");
+		JTextField multiplyFUsField = new JTextField("1");
 		multiplyFUsField.setBounds(70, 195, 40, 35);
-		JTextField loadFUsField = new JTextField("load");
+//		JTextField loadFUsField = new JTextField("load");
+		JTextField loadFUsField = new JTextField("1");
 		loadFUsField.setBounds(120, 195, 40, 35);
-		JTextField storeFUsField = new JTextField("store");
+//		JTextField storeFUsField = new JTextField("store");
+		JTextField storeFUsField = new JTextField("1");
 		storeFUsField.setBounds(170, 195, 40, 35);
-		JTextField jmpFUsField = new JTextField("jmp");
+//		JTextField jmpFUsField = new JTextField("jmp");
+		JTextField jmpFUsField = new JTextField("1");
 		jmpFUsField.setBounds(220, 195, 40, 35);
-		JTextField breqFUsField = new JTextField("breq");
+//		JTextField breqFUsField = new JTextField("breq");
+		JTextField breqFUsField = new JTextField("1");
 		breqFUsField.setBounds(270, 195, 40, 35);
-		JTextField jalFUsField = new JTextField("jal");
+//		JTextField jalFUsField = new JTextField("jal");
+		JTextField jalFUsField = new JTextField("1");
 		jalFUsField.setBounds(320, 195, 40, 35);
-		JTextField retFUsField = new JTextField("ret");
+//		JTextField retFUsField = new JTextField("ret");
+		JTextField retFUsField = new JTextField("1");
 		retFUsField.setBounds(370, 195, 40, 35);
-		JTextField subFUsField = new JTextField("sub");
+//		JTextField subFUsField = new JTextField("sub");
+		JTextField subFUsField = new JTextField("1");
 		subFUsField.setBounds(420, 195, 40, 35);
-		JTextField nandFUsField = new JTextField("nand");
+//		JTextField nandFUsField = new JTextField("nand");
+		JTextField nandFUsField = new JTextField("1");
 		nandFUsField.setBounds(470, 195, 40, 35);
-		JTextField addiFUsField = new JTextField("addi");
+//		JTextField addiFUsField = new JTextField("addi");
+		JTextField addiFUsField = new JTextField("1");
 		addiFUsField.setBounds(520, 195, 40, 35);
 
 		JLabel latenciesLabel = new JLabel(
@@ -154,27 +165,38 @@ public class TomasuloSimulator extends JFrame {
 		latenciesLabel.setBounds(20, 225, 500, 35);
 		latenciesLabel.setForeground(Color.white);
 
-		JTextField addLatField = new JTextField("add");
+//		JTextField addLatField = new JTextField("add");
+		JTextField addLatField = new JTextField("10");
 		addLatField.setBounds(20, 260, 40, 35);
-		JTextField multiplyLatField = new JTextField("mult");
+//		JTextField multiplyLatField = new JTextField("mult");
+		JTextField multiplyLatField = new JTextField("10");
 		multiplyLatField.setBounds(70, 260, 40, 35);
-		JTextField loadLatField = new JTextField("load");
+//		JTextField loadLatField = new JTextField("load");
+		JTextField loadLatField = new JTextField("10");
 		loadLatField.setBounds(120, 260, 40, 35);
-		JTextField storeLatField = new JTextField("store");
+//		JTextField storeLatField = new JTextField("store");
+		JTextField storeLatField = new JTextField("10");
 		storeLatField.setBounds(170, 260, 40, 35);
-		JTextField jmpLatField = new JTextField("jmp");
+//		JTextField jmpLatField = new JTextField("jmp");
+		JTextField jmpLatField = new JTextField("10");
 		jmpLatField.setBounds(220, 260, 40, 35);
-		JTextField breqLatField = new JTextField("breq");
+//		JTextField breqLatField = new JTextField("breq");
+		JTextField breqLatField = new JTextField("10");
 		breqLatField.setBounds(270, 260, 40, 35);
-		JTextField jalLatField = new JTextField("jal");
+//		JTextField jalLatField = new JTextField("jal");
+		JTextField jalLatField = new JTextField("10");
 		jalLatField.setBounds(320, 260, 40, 35);
-		JTextField retLatField = new JTextField("ret");
+//		JTextField retLatField = new JTextField("ret");
+		JTextField retLatField = new JTextField("10");
 		retLatField.setBounds(370, 260, 40, 35);
-		JTextField subLatField = new JTextField("sub");
+//		JTextField subLatField = new JTextField("sub");
+		JTextField subLatField = new JTextField("10");
 		subLatField.setBounds(420, 260, 40, 35);
-		JTextField nandLatField = new JTextField("nand");
+//		JTextField nandLatField = new JTextField("nand");
+		JTextField nandLatField = new JTextField("10");
 		nandLatField.setBounds(470, 260, 40, 35);
-		JTextField addiLatField = new JTextField("addi");
+//		JTextField addiLatField = new JTextField("addi");
+		JTextField addiLatField = new JTextField("10");
 		addiLatField.setBounds(520, 260, 40, 35);
 
 		ROBSizeLabel = new JLabel("Specify the size of the reoder buffer:");
@@ -210,6 +232,14 @@ public class TomasuloSimulator extends JFrame {
 		JTextField instructionBufferSize = new JTextField();
 		instructionBufferSize.setBounds(500, 400, 35, 35);
 
+		//Testing
+		ROBSizeText.setText("10");
+		mWay.setText("4");
+		iCacheNumberText.setText("3");
+		dCacheNumberText.setText("3");
+		accessTime.setText("50");
+		instructionBufferSize.setText("10");
+		
 		error = new JLabel(
 				"An error occured, please make sure you entered the settings correctly");
 		error.setForeground(Color.red);
@@ -267,6 +297,7 @@ public class TomasuloSimulator extends JFrame {
 					}
 					launchPanelTwo();
 				} catch (Exception ex) {
+					ex.printStackTrace();
 					error.setVisible(true);
 				}
 			}
@@ -372,15 +403,19 @@ public class TomasuloSimulator extends JFrame {
 			li.setForeground(Color.white);
 			panelTwo.add(li);
 			si[i] = new JTextField();
+			si[i].setText("64");
 			si[i].setBounds(80, 80 + (i * 30), 35, 35);
 			panelTwo.add(si[i]);
 			mi[i] = new JTextField();
+			mi[i].setText("1");
 			mi[i].setBounds(200, 80 + (i * 30), 35, 35);
 			panelTwo.add(mi[i]);
 			wi[i] = new JTextField();
+			wi[i].setText("1");
 			wi[i].setBounds(320, 80 + (i * 30), 35, 35);
 			panelTwo.add(wi[i]);
 			ai[i] = new JTextField();
+			ai[i].setText("10");
 			ai[i].setBounds(520, 80 + (i * 30), 35, 35);
 			panelTwo.add(ai[i]);
 		}
@@ -423,19 +458,27 @@ public class TomasuloSimulator extends JFrame {
 			ld.setForeground(Color.white);
 			panelTwo.add(ld);
 			sd[i] = new JTextField();
+			sd[i].setText("64");
 			sd[i].setBounds(80, 330 + (i * 30), 35, 35);
 			panelTwo.add(sd[i]);
 			md[i] = new JTextField();
+			md[i].setText("1");
 			md[i].setBounds(200, 330 + (i * 30), 35, 35);
 			panelTwo.add(md[i]);
 			wd[i] = new JTextField();
+			wd[i].setText("1");
 			wd[i].setBounds(320, 330 + (i * 30), 35, 35);
 			panelTwo.add(wd[i]);
 			ad[i] = new JTextField();
+			ad[i].setText("10");
 			ad[i].setBounds(520, 330 + (i * 30), 35, 35);
 			panelTwo.add(ad[i]);
 		}
-
+		
+		//Testing
+		dLineSizeText.setText("2");
+		iLineSizeText.setText("2");
+		
 		JButton start = new JButton("Start");
 		start.setBounds(350, 500, 100, 35);
 		start.addActionListener(new ActionListener() {
@@ -463,8 +506,8 @@ public class TomasuloSimulator extends JFrame {
 								Integer.parseInt(sd[i].getText()), dLineSize,
 								Integer.parseInt(md[i].getText()), p, Integer
 										.parseInt(ad[i].getText()));
-						startSimulator(iCache, dCache);
 					}
+					startSimulator(iCache, dCache);
 
 					// System.out.println("Line Size for I = "+iLineSize);
 					// System.out.println("Line Size for D = "+dLineSize);
@@ -479,6 +522,7 @@ public class TomasuloSimulator extends JFrame {
 					// System.out.println(mdValues[i]);
 				} catch (Exception e1) {
 					error.setVisible(true);
+					e1.printStackTrace();
 				}
 			}
 		});
@@ -516,7 +560,6 @@ public class TomasuloSimulator extends JFrame {
 
 	public void startSimulator(Cache[] iCaches, Cache[] dCaches)
 			throws IOException {
-
 		Simulator s = new Simulator(loadFUs, loadLat, storeFUs, storeLat,
 				jmpFUs, jmpLat, breqFUs, breqLat, jalFUs, jalLat, retFUs,
 				retLat, addFUs, addLat, subFUs, subLat, addiFUs, addiLat,
@@ -525,9 +568,10 @@ public class TomasuloSimulator extends JFrame {
 
 		BufferedReader br = new BufferedReader(new FileReader(programFile));
 		String line = "";
-		int i = 0;
+		int i = 3;
 		while ((line = br.readLine()) != null) {
-			Simulator.instructionMemory.write(new Word(line), i++);
+			Simulator.instructionMemory.write(new Word(line), i);
+			i++;
 		}
 		br.close();
 		s.run();
