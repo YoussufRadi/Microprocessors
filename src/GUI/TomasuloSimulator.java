@@ -100,6 +100,8 @@ public class TomasuloSimulator extends JFrame {
 	}
 
 	public void launchPanelOne() {
+		if(panelThree != null)
+			this.remove(panelThree);
 		panelOne = new JPanel();
 		panelOne.setBackground(Color.black);
 		panelOne.setLayout(null);

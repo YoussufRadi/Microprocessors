@@ -81,7 +81,8 @@ public class Tomasulo {
 			if (x == null) {
 				Simulator.run = false;
 				continue;
-			}
+			} else
+				Simulator.run = true;
 			String word = x.getData();
 			Instruction instruction = new Instruction(word);
 
