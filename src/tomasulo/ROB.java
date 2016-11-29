@@ -91,7 +91,7 @@ public class ROB {
 	public boolean commit() {
 		if (isEmpty())
 			return false;
-		System.out.print("C \t");
+		System.out.print(entry[head].getInstruction().getType() + "  C \t");
 		if (entry[head].getInstruction().isMissPridiction()){
 			Simulator.MissPredictionsBranches++;
 			Simulator.save = true;

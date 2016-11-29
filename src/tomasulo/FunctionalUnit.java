@@ -191,14 +191,14 @@ public class FunctionalUnit {
 				executeNewInstruction(clockCycle, i);
 			int cyclesLeft = start[i] + execTime[i] - clockCycle;
 			if (start[i] != -1 && cyclesLeft <= 0 && !ret) {
+				System.out.print(Op[i].getType() + "  W \t");
 				write(i);
-				System.out.print("W \t");
 				ret = true;
 			}
 			if(start[i] != -1 && cyclesLeft > 0 && issueTime[i] != clockCycle)
-				System.out.print("E \t");
-			else if(start[i] == -1)
-				System.out.print("S \t");
+				System.out.print(Op[i].getType() + "  E \t");
+			else if(Op[i] != null && start[i] == -1)
+				System.out.print(Op[i].getType() + "  S \t");
 		}
 		return ret;
 	}

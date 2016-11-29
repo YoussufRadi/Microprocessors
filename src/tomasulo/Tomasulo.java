@@ -60,7 +60,7 @@ public class Tomasulo {
 
 		int currentCycle = Simulator.clockCycle;
 		for (int i = 0; i < waitBuffer.size(); i++) {
-			System.out.print("F \t");
+			System.out.print(waitBuffer.get(i).getInstruction().getType() + "  F \t");
 			if (waitBuffer.get(i).getExpectedCycle() == currentCycle) {
 				// System.out.println(waitBuffer.get(i).getInstruction());
 				instructionBuffer.add(waitBuffer.remove(i).getInstruction());
@@ -119,15 +119,15 @@ public class Tomasulo {
 				doneFlag = Simulator.RS.issue(clockCycle,
 						instructionBuffer.peek(), ROBentry);
 			else {
-				System.out.print("S \t");
+				System.out.print(instructionBuffer.peek().getType() + "  S \t");
 				return;
 			}
 			if (doneFlag) {
+				System.out.print(instructionBuffer.peek().getType() + "  I \t");
 				instructionBuffer.poll();
 				ROBentry = -1;
-				System.out.print("I \t");
 			} else {
-				System.out.print("S \t");
+				System.out.print(instructionBuffer.peek().getType() + "  S \t");
 				return;
 			}
 		}
