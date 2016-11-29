@@ -91,7 +91,16 @@ public class ROB {
 	public boolean commit() {
 		if (isEmpty())
 			return false;
-		if(entry[head].getInstruction().getType().equals("BEQ") && entry[head].getInstruction().isMissPridiction()){
+		System.out.print(entry[head].getInstruction().getType() + "  C \t");
+		if (entry[head].getInstruction().isMissPridiction()){
+			Simulator.MissPredictionsBranches++;
+			Simulator.save = true;
+		}
+		else
+			Simulator.save = false;
+		if (entry[head].getInstruction().getType().equals("BEQ")
+				&& entry[head].getInstruction().isMissPridiction()) {
+//			System.out.println("Hey There I am miss pridiction");
 			flushAll();
 			return true;
 		}

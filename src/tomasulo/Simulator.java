@@ -20,6 +20,9 @@ public class Simulator {
 	public static double[] dCacheHitRatio;
 	public static double iAMAT;
 	public static double dAMAT;
+	public static double branches;
+	public static double MissPredictionsBranches;
+	public static double MissPredictionsRatio;
 
 	public Simulator(int loadNum, int loadTime, int storeNum, int storeTime,
 			int jmpNum, int jmpTime, int beqNum, int beqTime, int jalrNum,
@@ -43,20 +46,22 @@ public class Simulator {
 				nandNum, nandTime, mulNum, mulTime);
 		algorithm = new Tomasulo(numberOfWays, sizeBuffer);
 	}
+	public static boolean save = true;
 
 	public void run() {
 //		int i = 0;
 //		Memory m = Simulator.instructionMemory.getMainMemory();
 //		while(m.getData()[i].getData() != null)
 //			System.out.println(m.getData()[i++].getData());
-		while (run || !ROB.isEmpty()) {
-			System.out.println(clockCycle);
+		while (run || !ROB.isEmpty() || save) {
+			System.out.print(clockCycle + "\t");
 			algorithm.fetch();
 			algorithm.issue(clockCycle);
 			algorithm.execute(clockCycle);
 			algorithm.write(clockCycle);
 			algorithm.commit(clockCycle);
 			clockCycle++;
+			System.out.print("\n");
 		}
 		System.out.println(algorithm.getInstructionCount());
 		IPC = (algorithm.getInstructionCount()+0.0) / (clockCycle+0.0);
@@ -78,6 +83,7 @@ public class Simulator {
 		
 		iAMAT = (instructionMemory.getTotalAccessTime() + 0.0) / (instructionMemory.getAccess() + 0.0); 
 		dAMAT = (dataMemory.getTotalAccessTime() + 0.0) / (dataMemory.getAccess() + 0.0);
+		MissPredictionsRatio = MissPredictionsBranches / branches;
 	}
 
 	public static double[] getiCacheHitRatio() {

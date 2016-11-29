@@ -60,6 +60,7 @@ public class Tomasulo {
 
 		int currentCycle = Simulator.clockCycle;
 		for (int i = 0; i < waitBuffer.size(); i++) {
+			System.out.print(waitBuffer.get(i).getInstruction().getType() + "  F \t");
 			if (waitBuffer.get(i).getExpectedCycle() == currentCycle) {
 				// System.out.println(waitBuffer.get(i).getInstruction());
 				instructionBuffer.add(waitBuffer.remove(i).getInstruction());
@@ -81,10 +82,10 @@ public class Tomasulo {
 			if (x == null) {
 				Simulator.run = false;
 				continue;
-			}
+			} else
+				Simulator.run = true;
 			String word = x.getData();
 			Instruction instruction = new Instruction(word);
-
 			if (Simulator.instructionMemory.getLatestAccessTime() > largestAccessTime)
 				largestAccessTime = Simulator.instructionMemory
 						.getLatestAccessTime();
@@ -117,13 +118,18 @@ public class Tomasulo {
 			if (ROBentry != -1)
 				doneFlag = Simulator.RS.issue(clockCycle,
 						instructionBuffer.peek(), ROBentry);
-			else
+			else {
+				System.out.print(instructionBuffer.peek().getType() + "  S \t");
 				return;
+			}
 			if (doneFlag) {
+				System.out.print(instructionBuffer.peek().getType() + "  I \t");
 				instructionBuffer.poll();
 				ROBentry = -1;
-			} else
+			} else {
+				System.out.print(instructionBuffer.peek().getType() + "  S \t");
 				return;
+			}
 		}
 	}
 

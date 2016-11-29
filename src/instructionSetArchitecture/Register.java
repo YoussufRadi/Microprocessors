@@ -8,7 +8,7 @@ public class Register {
 
 	public Register(String name) {
 		this.name = name;
-		this.value = 3;
+		this.value = 0;
 		ROBEnteryUsing = -1;
 	}
 
