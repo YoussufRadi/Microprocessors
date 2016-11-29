@@ -54,13 +54,14 @@ public class Simulator {
 //		while(m.getData()[i].getData() != null)
 //			System.out.println(m.getData()[i++].getData());
 		while (run || !ROB.isEmpty() || save) {
-			System.out.println(clockCycle);
+			System.out.print(clockCycle + "\t");
 			algorithm.fetch();
 			algorithm.issue(clockCycle);
 			algorithm.execute(clockCycle);
 			algorithm.write(clockCycle);
 			algorithm.commit(clockCycle);
 			clockCycle++;
+			System.out.print("\n");
 		}
 		System.out.println(algorithm.getInstructionCount());
 		IPC = (algorithm.getInstructionCount()+0.0) / (clockCycle+0.0);

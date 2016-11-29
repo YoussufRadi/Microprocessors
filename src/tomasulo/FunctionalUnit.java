@@ -124,11 +124,11 @@ public class FunctionalUnit {
 		if (Qj[unit] != -1 || Qk[unit] != -1)
 			return;
 		Op[unit].execute();
-		if (Op[unit].getDestination() instanceof Register)
-			System.out.println("write in "
-					+ ((Register) Op[unit].getDestination()).getName()
-					+ " value : "
-					+ ((Register) Op[unit].getDestination()).getValue());
+//		if (Op[unit].getDestination() instanceof Register)
+//			System.out.println("write in "
+//					+ ((Register) Op[unit].getDestination()).getName()
+//					+ " value : "
+//					+ ((Register) Op[unit].getDestination()).getValue());
 		if (name.equals("LOAD") || name.equals("STORE"))
 			execTime[unit] = Op[unit].getAccessTime();
 		start[unit] = clockCycle;
@@ -182,8 +182,9 @@ public class FunctionalUnit {
 	}
 
 	public boolean execute(int clockCycle, boolean writeOnce) {
-		if (isEmpty())
+		if (isEmpty()){
 			return false;
+			}
 		boolean ret = writeOnce;
 		for (int i = 0; i < unitCount; i++) {
 			if (start[i] == -1 && issueTime[i] != clockCycle)
@@ -191,8 +192,13 @@ public class FunctionalUnit {
 			int cyclesLeft = start[i] + execTime[i] - clockCycle;
 			if (start[i] != -1 && cyclesLeft <= 0 && !ret) {
 				write(i);
+				System.out.print("W \t");
 				ret = true;
 			}
+			if(start[i] != -1 && cyclesLeft > 0 && issueTime[i] != clockCycle)
+				System.out.print("E \t");
+			else if(start[i] == -1)
+				System.out.print("S \t");
 		}
 		return ret;
 	}

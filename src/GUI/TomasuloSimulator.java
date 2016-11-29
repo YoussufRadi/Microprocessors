@@ -688,6 +688,7 @@ public class TomasuloSimulator extends JFrame {
 		this.revalidate();
 		this.repaint();
 	}
+	
 
 
 	public void startSimulator(Cache[] iCaches, Cache[] dCaches)
@@ -707,7 +708,7 @@ public class TomasuloSimulator extends JFrame {
 		}
 		br.close();
 		s.run();
-		System.out.println("IPC : " + Simulator.IPC);
+//		System.out.println("IPC : " + Simulator.IPC);
 		this.IPC = Simulator.IPC;
 		this.totalExecutionTime = Simulator.totalExecutionTime-1;
 		this.iCacheHitRatio = Simulator.iCacheHitRatio;

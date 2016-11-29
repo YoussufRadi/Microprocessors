@@ -274,8 +274,8 @@ public class Instruction {
 		int rB_value = Simulator.ISA_regs.readReg(rB_index);
 		boolean isEqual = rA_value == rB_value;
 
-		System.out.println("Hey from Instruction  : "
-				+ (isEqual && immediate > 0));
+//		System.out.println("Hey from Instruction  : "
+//				+ (isEqual && immediate > 0));
 		if (isEqual && immediate > 0) {
 			missPridiction = true;
 			this.destAddress = fetchPC + 1 + immediate;
